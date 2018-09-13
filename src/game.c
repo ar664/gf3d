@@ -7,6 +7,7 @@
 #include "gf3d_model.h"
 #include "gf3d_matrix.h"
 #include "gf3d_camera.h"
+#include "entity.h"
 
 int main(int argc,char *argv[])
 {
@@ -15,6 +16,8 @@ int main(int argc,char *argv[])
     
     init_logger("gf3d.log");
     slog("gf3d begin");
+
+    entity_init();
     if( gf3d_vgraphics_init(
         "gf3d",                 //program name
         1200,                   //screen width
