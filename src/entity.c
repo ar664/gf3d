@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "entity.h"
 #include "simple_logger.h"
 
@@ -14,10 +15,28 @@ void entity_init(){
         return;
     }
     for(i = 0; i < ENTITY_MAX; i++){
-        entity_list[i].Update = NULL;
-        entity_list[i].Destroy = NULL;
+        memset(&entity_list[i], 0, sizeof(struct entity_s));
     }
-    atexit(entity_destroy);
+    atexit(entity_shutdown);
+}
+
+entity_t *entity_new(){
+    int i;
+    for(i = 0; i < ENTITY_MAX;i++){
+        if(!entity_list[i].in_use){
+            entity_list[i].in_use = 1;
+            entity_list[i].Destroy = entity_generic_destroy;
+        }
+    }
+    return NULL;
+}
+
+void entity_generic_destroy(entity_t *self){
+    if(!self){
+        slog("Tried to destroy NULL entity");
+        return;
+    }
+    self->in_use = 0;
 }
 
 void entity_update(){
@@ -29,7 +48,7 @@ void entity_update(){
     }
 }
 
-void entity_destroy(){
+void entity_shutdown(){
     int i;
     for(i = 0; i < ENTITY_MAX; i++){
         if(entity_list[i].Destroy){
