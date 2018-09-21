@@ -1,7 +1,7 @@
 #include "gf3d_pipeline.h"
 #include "gf3d_swapchain.h"
 #include "gf3d_shaders.h"
-
+#include "gf3d_vertex.h"
 #include "simple_logger.h"
 
 typedef struct
@@ -149,10 +149,10 @@ Pipeline *gf3d_pipeline_graphics_load(VkDevice device,char *vertFile,char *fragF
     shaderStages[1] = fragShaderStageInfo;
     
     vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-    vertexInputInfo.vertexBindingDescriptionCount = 0;
-    vertexInputInfo.pVertexBindingDescriptions = NULL; // Optional
-    vertexInputInfo.vertexAttributeDescriptionCount = 0;
-    vertexInputInfo.pVertexAttributeDescriptions = NULL; // Optional    return pipe;
+    vertexInputInfo.vertexBindingDescriptionCount = 1;
+    vertexInputInfo.pVertexBindingDescriptions = &sampleBindingDescription; // Optional
+    vertexInputInfo.vertexAttributeDescriptionCount = 2;
+    vertexInputInfo.pVertexAttributeDescriptions = &sampleAttributeDescription; // Optional    return pipe;
 
     // TODO: pull all this information from config file
     inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;

@@ -53,6 +53,8 @@ typedef struct
     
     VkSemaphore                 imageAvailableSemaphore;
     VkSemaphore                 renderFinishedSemaphore;
+
+    VkBuffer                    *vertex_buffer;
     
     Pipeline                   *pipe;
 }vGraphics;
@@ -106,6 +108,9 @@ int gf3d_vgraphics_init(
     gf3d_vgraphics.pipe = gf3d_pipeline_graphics_load(device,"shaders/vert.spv","shaders/frag.spv",gf3d_vgraphics_get_view_extent());
 
     gf3d_swapchain_setup_frame_buffers(gf3d_vgraphics.pipe);
+
+    //Init Vertex Buffers
+    gf3d_vertex_create_buffer(device, gf3d_vgraphics.vertex_buffer);
 
     gf3d_command_pool_setup(device,gf3d_swapchain_get_frame_buffer_count(),gf3d_vgraphics.pipe);
     
@@ -276,6 +281,8 @@ int gf3d_vgraphics_setup(
 
     // swap chain!!!
     gf3d_swapchain_init(gf3d_vgraphics.gpu,gf3d_vgraphics.device,gf3d_vgraphics.surface,renderWidth,renderHeight);
+
+    gf3d_vertex_init();
 
     return 0;
 }
