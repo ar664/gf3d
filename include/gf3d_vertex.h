@@ -28,10 +28,11 @@ void gf3d_vertex_init();
 /**
  * @brief Create a vertex buffer with previously
  * 
- * @param device        The device to reference 
- * @param vertex_buffer The buffer to fill with info about itself
+ * @param device                The device to reference 
+ * @param vertex_buffer         The buffer to fill with info about itself
+ * @param vertex_buffer_memory  The vkBuffer to use for memory
  */
-void gf3d_vertex_create_buffer(VkPhysicalDevice device, VkBuffer *vertex_buffer);
+void gf3d_vertex_create_buffer(VkPhysicalDevice device, VkBuffer *vertex_buffer, VkDeviceMemory *vertex_buffer_memory);
 
 /**
  * @brief Delete all vertex buffers

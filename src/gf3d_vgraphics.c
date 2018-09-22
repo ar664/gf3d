@@ -55,6 +55,7 @@ typedef struct
     VkSemaphore                 renderFinishedSemaphore;
 
     VkBuffer                    *vertex_buffer;
+    VkDeviceMemory              *vertex_buffer_memory;
     
     Pipeline                   *pipe;
 }vGraphics;
@@ -110,7 +111,7 @@ int gf3d_vgraphics_init(
     gf3d_swapchain_setup_frame_buffers(gf3d_vgraphics.pipe);
 
     //Init Vertex Buffers
-    gf3d_vertex_create_buffer(device, gf3d_vgraphics.vertex_buffer);
+    gf3d_vertex_create_buffer(&device, gf3d_vgraphics.vertex_buffer, gf3d_vgraphics.vertex_buffer_memory);
 
     gf3d_command_pool_setup(device,gf3d_swapchain_get_frame_buffer_count(),gf3d_vgraphics.pipe);
     

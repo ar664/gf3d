@@ -6,11 +6,14 @@ struct VkVertexInputBindingDescription     sampleBindingDescription;
 
 typedef struct 
 {
-    VkDevice                            device;
-    VkBuffer                            vertexBuffer;
+    VkDevice                            *device;
+    VkBuffer                            *vertexBuffer;
+    VkDeviceMemory                      *vertexMemory;
+
 }VertexBufferManager;
 
-static VertexBufferManager gf3d_vertex_buffer_manager = {0};
+static VertexBufferManager gf3d_vertex_manager = {0};
+uint32_t gf3d_find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties, VkPhysicalDeviceMemoryProperties *memProperties);
 
 void gf3d_vertex_init(){
     sampleBindingDescription.binding = 0;
@@ -27,33 +30,75 @@ void gf3d_vertex_init(){
 
 }
 
-void gf3d_vertex_create_buffer(VkPhysicalDevice device, VkBuffer *vertex_buffer){
-    
-    if(!vertex_buffer)
+void gf3d_vertex_create_buffer(VkPhysicalDevice device, VkBuffer *vertex_buffer, VkDeviceMemory *vertex_buffer_memory){
+    VkBufferCreateInfo                  bufferInfo;
+    VkMemoryAllocateInfo                allocInfo;
+    VkMemoryRequirements                memRequirements;
+    VkPhysicalDeviceMemoryProperties    memProperties;
+
+    if(!vertex_buffer || !vertex_buffer_memory)
     {
         slog("Gave null vertex buffer");
         return;
     }
+
     *vertex_buffer = &sampleVerts;
-    gf3d_vertex_buffer_manager.device = device;
-    gf3d_vertex_buffer_manager.vertexBuffer = vertex_buffer;
-    VkBufferCreateInfo bufferInfo;
+    gf3d_vertex_manager.device = device;
+    
+
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
     bufferInfo.size = (sizeof(Vector2D) + sizeof(Vector3D)) * 3;
     bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
     bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-    if(vkCreateBuffer(gf3d_vertex_buffer_manager.device, &bufferInfo, NULL, vertex_buffer) != VK_SUCCESS){
+    if(vkCreateBuffer(device,
+                      &bufferInfo, 
+                      NULL, 
+                      vertex_buffer) != VK_SUCCESS)
+    {
         slog("Failed to create vertex buffer");
         return;
     }
 
-    atexit(gf3d_vertex_shutdown);
+    vkGetBufferMemoryRequirements(device, vertex_buffer, &memRequirements);
 
+    allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    allocInfo.allocationSize = memRequirements.size;
+    allocInfo.memoryTypeIndex = gf3d_find_memory_type(memRequirements.memoryTypeBits,
+                                                      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+                                                      &memProperties);
+    
+    if(vkAllocateMemory(device,
+                        &allocInfo,
+                        NULL,
+                        vertex_buffer_memory) != VK_SUCCESS)
+    {
+        slog("Failed to allocate memory for vertex array");
+        return;
+    }
+
+    gf3d_vertex_manager.vertexBuffer = vertex_buffer;
+    gf3d_vertex_manager.vertexMemory = vertex_buffer_memory;
+
+    atexit(gf3d_vertex_shutdown);
     return;
+}
+
+uint32_t gf3d_find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties, VkPhysicalDeviceMemoryProperties *memProperties){
+    int i;
+    vkGetPhysicalDeviceMemoryProperties(gf3d_vertex_manager.device, memProperties);
+    
+    for(i = 0; i < memProperties->memoryTypeCount; i++)
+    {
+        if ((typeFilter & (1 << i)) && (memProperties->memoryTypes[i].propertyFlags & properties) == properties) 
+        {
+            return i;
+        }
+    }
+    return 5077;    //ERROR CODE
 }
 
 void gf3d_vertex_shutdown(){
     
-    vkDestroyBuffer(gf3d_vertex_buffer_manager.device,gf3d_vertex_buffer_manager.vertexBuffer, NULL);
-
+    vkDestroyBuffer(gf3d_vertex_manager.device,gf3d_vertex_manager.vertexBuffer, NULL);
+    vkFreeMemory(gf3d_vertex_manager.device, gf3d_vertex_manager.vertexMemory, NULL);
 }
