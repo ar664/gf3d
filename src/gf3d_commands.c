@@ -16,7 +16,7 @@ static Commands gf3d_commands = {0};
 void gf3d_command_pool_close();
 void gf3d_command_buffer_begin(Pipeline *pipe);
 
-void gf3d_command_pool_setup(VkDevice device,Uint32 count,Pipeline *pipe, VkBuffer vertex_buffer)
+void gf3d_command_pool_setup(VkDevice device,Uint32 count,Pipeline *pipe)
 {
     VkCommandPoolCreateInfo poolInfo = {0};
     VkCommandBufferAllocateInfo allocInfo = {0};
@@ -69,12 +69,15 @@ void gf3d_command_pool_close()
     memset(&gf3d_commands,0,sizeof(Commands));
 }
 
-void gf3d_command_execute_render_pass(VkCommandBuffer commandBuffer, VkRenderPass renderPass,VkFramebuffer framebuffer,VkPipeline graphicsPipeline)
+void gf3d_command_execute_render_pass(VkCommandBuffer commandBuffer, VkRenderPass renderPass,VkFramebuffer framebuffer,VkPipeline graphicsPipeline, VkBuffer vertex_buffer)
 {
     VkClearValue clearColor = {0};
     VkRenderPassBeginInfo renderPassInfo = {0};
     VkCommandBufferBeginInfo beginInfo = {0};
-    
+    VkBuffer vertexBuffers[] = {vertex_buffer};
+    VkDeviceSize offsets[] = {0};
+
+
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
     beginInfo.pInheritanceInfo = NULL; // Optional
@@ -101,6 +104,9 @@ void gf3d_command_execute_render_pass(VkCommandBuffer commandBuffer, VkRenderPas
     //instanceCount: Used for instanced rendering, use 1 if you're not doing that.
     //firstVertex: Used as an offset into the vertex buffer, defines the lowest value of gl_VertexIndex.
     //firstInstance: Used as an offset for instanced rendering, defines the lowest value of gl_InstanceIndex.
+    
+    vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+    
     vkCmdDraw(commandBuffer, 3, 1, 0, 0);
     vkCmdEndRenderPass(commandBuffer);
     if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
@@ -122,7 +128,8 @@ void gf3d_command_buffer_begin(Pipeline *pipe)
             gf3d_commands.commandBuffers[i], 
             pipe->renderPass,
             gf3d_swapchain_get_frame_buffer_by_index(i),
-            pipe->graphicsPipeline);
+            pipe->graphicsPipeline,
+            pipe->vertexBuffer);
     }
 }
 

@@ -93,7 +93,7 @@ void gf3d_vertex_create_buffer(VkPhysicalDevice device, VkBuffer *vertex_buffer,
     }
 
     vkMapMemory(device, vertex_buffer_memory, 0, bufferInfo.size, 0, &data);
-    memcpy(data, vertex_buffer->data, (size_t) bufferInfo.size);
+    memcpy(data, sampleVerts, (size_t) bufferInfo.size);
     vkUnmapMemory(device, vertex_buffer_memory);
 
     gf3d_vertex_manager.vertexBuffer = vertex_buffer;

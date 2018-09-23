@@ -19,6 +19,7 @@ typedef struct
     char               *fragShader;
     VkShaderModule      fragModule;
     VkDevice            device;
+    VkBuffer            *vertexBuffer;
 }Pipeline;
 
 /**
@@ -40,5 +41,12 @@ void gf3d_pipeline_free(Pipeline *pipe);
  * @returns NULL on error (see logs) or a pointer to a pipeline
  */
 Pipeline *gf3d_pipeline_graphics_load(VkDevice device,char *vertFile,char *fragFile,VkExtent2D extent);
+
+/**
+ * @brief This is called after vertex buffer gets created. To save passing more parameters during the commandbuffer stage
+ * 
+ * @param vertex_buffer The allocated & filled VkBuffer for vertexes
+ */
+void gf3d_pipeline_give_vertex_buffer(Pipeline *pipe, VkBuffer vertex_buffer);
 
 #endif

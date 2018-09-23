@@ -12,12 +12,12 @@
  * @param count the swap chain count
  * @param pipe the pointer to the graphics pipeline to use
  */
-void gf3d_command_pool_setup(VkDevice device,Uint32 count,Pipeline *pipe, VkBuffer vertex_buffer);
+void gf3d_command_pool_setup(VkDevice device,Uint32 count,Pipeline *pipe);
 
 /**
  * @brief execute a render pass
  */
-void gf3d_command_execute_render_pass(VkCommandBuffer commandBuffer, VkRenderPass renderPass,VkFramebuffer framebuffer,VkPipeline graphicsPipeline);
+void gf3d_command_execute_render_pass(VkCommandBuffer commandBuffer, VkRenderPass renderPass,VkFramebuffer framebuffer,VkPipeline graphicsPipeline, VkBuffer vertex_buffer);
 
 /**
  * @brief get a command buffer by index

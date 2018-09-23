@@ -113,6 +113,8 @@ int gf3d_vgraphics_init(
     //Init Vertex Buffers
     gf3d_vertex_create_buffer(&device, gf3d_vgraphics.vertex_buffer, gf3d_vgraphics.vertex_buffer_memory);
 
+    gf3d_pipeline_give_vertex_buffer(gf3d_vgraphics.pipe, gf3d_vgraphics.vertex_buffer);
+
     gf3d_command_pool_setup(device,gf3d_swapchain_get_frame_buffer_count(),gf3d_vgraphics.pipe);
     
     gf3d_vgraphics_semaphores_create();

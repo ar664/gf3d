@@ -256,6 +256,15 @@ Pipeline *gf3d_pipeline_graphics_load(VkDevice device,char *vertFile,char *fragF
     return pipe;
 }
 
+void gf3d_pipeline_give_vertex_buffer(Pipeline* pipe, VkBuffer vertex_buffer){
+    if(!pipe)
+    {
+        slog("Giving vertex buffer to non-existant pipe");
+        return;
+    }
+    pipe->vertexBuffer = vertex_buffer;
+}
+
 void gf3d_pipeline_free(Pipeline *pipe)
 {
     if (!pipe)return;
