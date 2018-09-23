@@ -16,7 +16,7 @@ static Commands gf3d_commands = {0};
 void gf3d_command_pool_close();
 void gf3d_command_buffer_begin(Pipeline *pipe);
 
-void gf3d_command_pool_setup(VkDevice device,Uint32 count,Pipeline *pipe)
+void gf3d_command_pool_setup(VkDevice device,Uint32 count,Pipeline *pipe, VkBuffer vertex_buffer)
 {
     VkCommandPoolCreateInfo poolInfo = {0};
     VkCommandBufferAllocateInfo allocInfo = {0};
