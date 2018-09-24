@@ -7,10 +7,13 @@ struct VkVertexInputBindingDescription     sampleBindingDescription;
 typedef struct 
 {
     VkDevice                            device;
-    VkBuffer                            *vertexBuffer;
-    VkDeviceMemory                      *vertexMemory;
+    VkPhysicalDevice                    physicalDevice;
+    VkBuffer                            vertexBuffer;
+    VkDeviceMemory                      vertexMemory;
 
 }VertexBufferManager;
+
+VkBuffer workGodDamnBuffer;
 
 static VertexBufferManager gf3d_vertex_manager = {0};
 uint32_t gf3d_find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties, VkPhysicalDeviceMemoryProperties *memProperties);
@@ -30,7 +33,7 @@ void gf3d_vertex_init(){
 
 }
 
-void gf3d_vertex_create_buffer(VkPhysicalDevice device, VkBuffer *vertex_buffer, VkDeviceMemory *vertex_buffer_memory){
+void gf3d_vertex_create_buffer(VkDevice device, VkBuffer vertexBuffer, VkDeviceMemory vertexBufferMemory, VkPhysicalDevice physicalDevice){
     VkBufferCreateInfo                  bufferInfo;
     VkMemoryAllocateInfo                allocInfo;
     VkMemoryRequirements                memRequirements;
@@ -38,30 +41,30 @@ void gf3d_vertex_create_buffer(VkPhysicalDevice device, VkBuffer *vertex_buffer,
     uint32_t                            typeBits;
     void*                               data;
 
-    if(!vertex_buffer || !vertex_buffer_memory)
+    /* if(!vertexBuffer || !vertexBufferMemory)
     {
         slog("Gave null vertex buffer");
         return;
-    }
+    } */
 
-    *vertex_buffer = &sampleVerts;
+    //*vertexBuffer = &sampleVerts;
     gf3d_vertex_manager.device = device;
-    
+    gf3d_vertex_manager.physicalDevice = physicalDevice;
 
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    bufferInfo.size = (sizeof(Vector2D) + sizeof(Vector3D)) * 3;    /*< HARD CODED VALUE, EDIT LATER */
+    bufferInfo.size = sizeof(sampleVerts[0]) * sizeof(sampleVerts)/sizeof(sampleVerts[0]);    /*< HARD CODED VALUE, EDIT LATER */
     bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
     bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
     if(vkCreateBuffer(device,
                       &bufferInfo, 
                       NULL, 
-                      vertex_buffer) != VK_SUCCESS)
+                      &gf3d_vertex_manager.vertexBuffer) != VK_SUCCESS)
     {
         slog("Failed to create vertex buffer");
         return;
     }
 
-    vkGetBufferMemoryRequirements(device, vertex_buffer, &memRequirements);
+    vkGetBufferMemoryRequirements(device, vertexBuffer, &memRequirements);
 
     allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     allocInfo.allocationSize = memRequirements.size;
@@ -77,27 +80,27 @@ void gf3d_vertex_create_buffer(VkPhysicalDevice device, VkBuffer *vertex_buffer,
     if(vkAllocateMemory(device,
                         &allocInfo,
                         NULL,
-                        vertex_buffer_memory) != VK_SUCCESS)
+                        &vertexBufferMemory) != VK_SUCCESS)
     {
         slog("Failed to allocate memory for vertex array");
         return;
     }
 
     if(vkBindBufferMemory(device,
-                          vertex_buffer,
-                          vertex_buffer_memory,
+                          &vertexBuffer,
+                          &vertexBufferMemory,
                           0) != VK_SUCCESS)
     {
         slog("Failed to bind memory");
         return;
     }
 
-    vkMapMemory(device, vertex_buffer_memory, 0, bufferInfo.size, 0, &data);
+    vkMapMemory(device, &vertexBufferMemory, 0, bufferInfo.size, 0, &data);
     memcpy(data, sampleVerts, (size_t) bufferInfo.size);
-    vkUnmapMemory(device, vertex_buffer_memory);
+    vkUnmapMemory(device, &vertexBufferMemory);
 
-    gf3d_vertex_manager.vertexBuffer = vertex_buffer;
-    gf3d_vertex_manager.vertexMemory = vertex_buffer_memory;
+    gf3d_vertex_manager.vertexBuffer = vertexBuffer;
+    gf3d_vertex_manager.vertexMemory = vertexBufferMemory;
 
     atexit(gf3d_vertex_shutdown);
     return;
@@ -105,7 +108,7 @@ void gf3d_vertex_create_buffer(VkPhysicalDevice device, VkBuffer *vertex_buffer,
 
 uint32_t gf3d_find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties, VkPhysicalDeviceMemoryProperties *memProperties){
     int i;
-    vkGetPhysicalDeviceMemoryProperties(gf3d_vertex_manager.device, memProperties);
+    vkGetPhysicalDeviceMemoryProperties(gf3d_vertex_manager.physicalDevice, memProperties);
     
     for(i = 0; i < memProperties->memoryTypeCount; i++)
     {
@@ -119,6 +122,6 @@ uint32_t gf3d_find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags proper
 
 void gf3d_vertex_shutdown(){
     
-    vkDestroyBuffer(gf3d_vertex_manager.device, *gf3d_vertex_manager.vertexBuffer, NULL);
-    vkFreeMemory(gf3d_vertex_manager.device, *gf3d_vertex_manager.vertexMemory, NULL);
+    vkDestroyBuffer(gf3d_vertex_manager.device, gf3d_vertex_manager.vertexBuffer, NULL);
+    vkFreeMemory(gf3d_vertex_manager.device, gf3d_vertex_manager.vertexMemory, NULL);
 }

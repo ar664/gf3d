@@ -151,8 +151,8 @@ Pipeline *gf3d_pipeline_graphics_load(VkDevice device,char *vertFile,char *fragF
     vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     vertexInputInfo.vertexBindingDescriptionCount = 1;
     vertexInputInfo.pVertexBindingDescriptions = &sampleBindingDescription; // Optional
-    vertexInputInfo.vertexAttributeDescriptionCount = 2;
-    vertexInputInfo.pVertexAttributeDescriptions = &sampleAttributeDescription; // Optional    return pipe;
+    vertexInputInfo.vertexAttributeDescriptionCount = sizeof(sampleAttributeDescription) / sizeof(sampleAttributeDescription[0]);
+    vertexInputInfo.pVertexAttributeDescriptions = sampleAttributeDescription; // Optional    return pipe;
 
     // TODO: pull all this information from config file
     inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -256,13 +256,13 @@ Pipeline *gf3d_pipeline_graphics_load(VkDevice device,char *vertFile,char *fragF
     return pipe;
 }
 
-void gf3d_pipeline_give_vertex_buffer(Pipeline* pipe, VkBuffer vertex_buffer){
+void gf3d_pipeline_give_vertex_buffer(Pipeline* pipe, VkBuffer vertexBuffer){
     if(!pipe)
     {
         slog("Giving vertex buffer to non-existant pipe");
         return;
     }
-    pipe->vertexBuffer = vertex_buffer;
+    pipe->vertexBuffer = vertexBuffer;
 }
 
 void gf3d_pipeline_free(Pipeline *pipe)

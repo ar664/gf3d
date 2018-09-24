@@ -16,6 +16,7 @@
 #include "gf3d_vgraphics.h"
 #include "gf3d_pipeline.h"
 #include "gf3d_commands.h"
+#include "gf3d_vertex.h"
 
 #include "simple_logger.h"
 
@@ -54,8 +55,8 @@ typedef struct
     VkSemaphore                 imageAvailableSemaphore;
     VkSemaphore                 renderFinishedSemaphore;
 
-    VkBuffer                    *vertex_buffer;
-    VkDeviceMemory              *vertex_buffer_memory;
+    VkBuffer                    vertexBuffer;
+    VkDeviceMemory              vertexBufferMemory;
     
     Pipeline                   *pipe;
 }vGraphics;
@@ -111,9 +112,12 @@ int gf3d_vgraphics_init(
     gf3d_swapchain_setup_frame_buffers(gf3d_vgraphics.pipe);
 
     //Init Vertex Buffers
-    gf3d_vertex_create_buffer(&device, gf3d_vgraphics.vertex_buffer, gf3d_vgraphics.vertex_buffer_memory);
+    //gf3d_vgraphics.vertexBuffer = malloc(sizeof(VkBuffer));
+    //gf3d_vgraphics.vertexBuffer_memory = malloc(sizeof(VkDeviceMemory));
+    gf3d_vertex_create_buffer(device, gf3d_vgraphics.vertexBuffer, gf3d_vgraphics.vertexBufferMemory, gf3d_vgraphics.gpu);
 
-    gf3d_pipeline_give_vertex_buffer(gf3d_vgraphics.pipe, gf3d_vgraphics.vertex_buffer);
+    
+    gf3d_pipeline_give_vertex_buffer(gf3d_vgraphics.pipe, gf3d_vgraphics.vertexBuffer);
 
     gf3d_command_pool_setup(device,gf3d_swapchain_get_frame_buffer_count(),gf3d_vgraphics.pipe);
     
