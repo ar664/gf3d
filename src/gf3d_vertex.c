@@ -52,7 +52,7 @@ void gf3d_vertex_create_buffer(VkDevice device, VkBuffer vertexBuffer, VkDeviceM
     if(vkCreateBuffer(device,
                       &bufferInfo, 
                       NULL, 
-                      &gf3d_vertex_manager.vertexBuffer) != VK_SUCCESS)
+                      &vertexBuffer) != VK_SUCCESS)
     {
         slog("Failed to create vertex buffer");
         return;
