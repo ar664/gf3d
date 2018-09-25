@@ -12,6 +12,8 @@ typedef struct
 
 }VertexBufferManager;
 
+
+VkBuffer vertexBufferGod;
 static VertexBufferManager gf3d_vertex_manager = {0};
 uint32_t gf3d_find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties, VkPhysicalDeviceMemoryProperties *memProperties);
 
@@ -21,11 +23,11 @@ void gf3d_vertex_init(){
     sampleBindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
     sampleAttributeDescription[0].binding = 0;
     sampleAttributeDescription[0].location = 0;
-    sampleAttributeDescription[0].format = VK_FORMAT_R64G64B64A64_SFLOAT;
+    sampleAttributeDescription[0].format = VK_FORMAT_R64G64_SFLOAT;
     sampleAttributeDescription[0].offset = offsetof(struct Vertex, pos);
     sampleAttributeDescription[1].binding = 0;
     sampleAttributeDescription[1].location = 0;
-    sampleAttributeDescription[1].format = VK_FORMAT_R64G64B64A64_SFLOAT;
+    sampleAttributeDescription[1].format = VK_FORMAT_R64G64B64_SFLOAT;
     sampleAttributeDescription[1].offset = offsetof(struct Vertex, color);
 
 }
@@ -37,7 +39,7 @@ void gf3d_vertex_create_buffer(VkDevice device, VkBuffer vertexBuffer, VkDeviceM
     VkPhysicalDeviceMemoryProperties    memProperties;
     void*                               data;
 
-    /* if(!vertexBufferMemory || !vertexBufferMemory)
+    /* if(!vertexBuffer || !vertexBufferMemory)
     {
         slog("Gave null vertex buffer");
         return;
@@ -46,7 +48,7 @@ void gf3d_vertex_create_buffer(VkDevice device, VkBuffer vertexBuffer, VkDeviceM
     gf3d_vertex_manager.device = device;
 
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    bufferInfo.size = (sizeof(Vector2D) + sizeof(Vector3D)) * 3;    /*< HARD CODED VALUE, EDIT LATER */
+    bufferInfo.size = sizeof(struct Vertex) * 3;    /*< HARD CODED VALUE, EDIT LATER */
     bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
     bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
     if(vkCreateBuffer(device,
