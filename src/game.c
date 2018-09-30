@@ -13,6 +13,8 @@ int main(int argc,char *argv[])
 {
     int done = 0;
     const Uint8 * keys;
+    Object *sample_object;
+    Sprite *sample_sprite;
     
     init_logger("gf3d.log");
     slog("gf3d begin");
@@ -29,7 +31,9 @@ int main(int argc,char *argv[])
     }
 
     gf3d_object_init();
-    
+    gf3d_sprite_init();
+    sample_object = gf3d_object_load("models/chalet.obj");
+    sample_sprite = gf3d_sprite_load("textures/sample.png", 1024,1024);
     
     // main game loop
     while(!done)

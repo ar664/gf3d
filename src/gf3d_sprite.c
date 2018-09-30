@@ -106,7 +106,7 @@ void DeleteSprite(Sprite *sprite)
     memset(sprite,0,sizeof(Sprite));
 }
 
-void FreeSprite(Sprite *sprite)
+void gf3d_sprite_free(Sprite *sprite)
 {
   /*first lets check to see if the sprite is still being used.*/
   if (!sprite)return;
