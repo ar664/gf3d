@@ -1,6 +1,6 @@
-#include "sprite.h"
+#include "gf3d_sprite.h"
+
 #include "simple_logger.h"
-#include "graphics3d.h"
 
 #include <SDL2/SDL_image.h>
 
@@ -9,12 +9,15 @@
 static Sprite SpriteList[MAX_SPRITES];
 
 
-void InitSpriteList()
+void gf3d_sprite_init()
 {
   int x;
   memset(SpriteList,0,sizeof(Sprite) * MAX_SPRITES);
-  for(x = 0;x < MAX_SPRITES;x++)SpriteList[x].image = NULL;
-  atexit(CloseSprites);
+  for(x = 0;x < MAX_SPRITES;x++)
+  {
+      SpriteList[x].image = NULL;
+  }
+  atexit(gf3d_sprite_close);
 }
 
 
@@ -47,11 +50,11 @@ Sprite *SpriteGetByFilename(char *filename)
     return NULL;
 }
 
-Sprite *LoadSprite(char *filename,int fw, int fh)
+Sprite *gf3d_sprite_load(char *filename,int fw, int fh)
 {
     Sprite *sprite;
     SDL_Surface *image;
-    int Mode = GL_RGB;
+    int Mode = 0;//GL_RGB;
     
     sprite = SpriteGetByFilename(filename);
     if (sprite)return sprite;
@@ -83,7 +86,7 @@ Sprite *LoadSprite(char *filename,int fw, int fh)
 
     
     if(sprite->image->format->BytesPerPixel == 4) {
-        Mode = GL_RGBA;
+        Mode = 0;//GL_RGBA;
     }
     
     //glTexImage2D(GL_TEXTURE_2D, 0, Mode, sprite->image->w, sprite->image->h, 0, Mode, GL_UNSIGNED_BYTE, sprite->image->pixels);
@@ -114,7 +117,7 @@ void FreeSprite(Sprite *sprite)
   }
 }
 
-void CloseSprites()
+void gf3d_sprite_close()
 {
   int i;
   for(i = 0;i < MAX_SPRITES;i++)

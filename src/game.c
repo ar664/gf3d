@@ -6,6 +6,8 @@
 #include "gf3d_model.h"
 #include "gf3d_matrix.h"
 #include "gf3d_camera.h"
+#include "gf3d_object.h"
+#include "gf3d_sprite.h"
 
 int main(int argc,char *argv[])
 {
@@ -25,6 +27,9 @@ int main(int argc,char *argv[])
         slog("Fail to initialize graphics, exiting...");
         return -1;
     }
+
+    gf3d_object_init();
+    
     
     // main game loop
     while(!done)

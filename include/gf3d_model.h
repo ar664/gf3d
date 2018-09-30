@@ -26,6 +26,7 @@
 #include "gf3d_vector.h"
 #include "gf3d_matrix.h"
 #include "gf3d_text.h"
+#include "gf3d_sprite.h"
 
 typedef struct Model_S
 {
@@ -34,13 +35,13 @@ typedef struct Model_S
     Uint32  num_tris;
     Uint32  num_vertices;
     
-    GLuint  vertex_bo;
-    GLuint  face_eab;    /**<element array buffer for triangle data*/
+    uint32_t  vertex_bo;
+    uint32_t  face_eab;    /**<element array buffer for triangle data*/
     
     float  *vertex_array;    /**<vertex positions*/
     float  *attribute_array; /**<normals and uvs packed NUNUNUNU*/
 
-    GLuint *triangle_array;
+    uint32_t *triangle_array;
     
     Sprite *texture;        /**<pointer to texture data*/
     Uint8   ref_count;             /**<refcount*/

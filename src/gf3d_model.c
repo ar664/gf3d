@@ -6,15 +6,15 @@
 #include "simple_logger.h"
 
 
-#define __model_max 1024
+#define MODEL_MAX 1024
 
-static Model ModelList[__model_max];
+static Model ModelList[MODEL_MAX];
 
 static void model_close();
 
 void model_init()
 {
-    memset(ModelList,0,sizeof(Model)*__model_max);
+    memset(ModelList,0,sizeof(Model)*MODEL_MAX);
     atexit(model_close);
 }
 
@@ -41,17 +41,17 @@ static void model_delete(Model *model)
 void model_free(Model *model)
 {
     if (!model)return;
-    model->used--;
-    if (model->used > 0)return;
+    model->ref_count--;
+    if (model->ref_count > 0)return;
     model_delete(model);
 }
 
 static void model_close()
 {
     int i;
-    for (i = 0; i < __model_max; i++)
+    for (i = 0; i < MODEL_MAX; i++)
     {
-        if (ModelList[i].used)
+        if (ModelList[i].ref_count)
         {
             model_delete(&ModelList[i]);
         }
@@ -61,12 +61,12 @@ static void model_close()
 Model *model_new()
 {
     int i;
-    for (i = 0; i < __model_max; i++)
+    for (i = 0; i < MODEL_MAX; i++)
     {
-        if (ModelList[i].used == 0)
+        if (ModelList[i].ref_count == 0)
         {
             memset(&ModelList[i],0,sizeof(Model));
-            ModelList[i].used = 1;
+            ModelList[i].ref_count = 1;
             return &ModelList[i];
         }
     }
@@ -76,9 +76,9 @@ Model *model_new()
 Model *model_get_by_filename(char *filename)
 {
     int i;
-    for (i = 0; i < __model_max; i++)
+    for (i = 0; i < MODEL_MAX; i++)
     {
-        if ((ModelList[i].used != 0) &&
+        if ((ModelList[i].ref_count != 0) &&
             (strcmp(ModelList[i].filename,filename) == 0))
         {
             return &ModelList[i];
@@ -96,7 +96,7 @@ void model_assign_texture(Model *model,char *texture)
     model->texture = sprite;
 }
 
-int model_allocate_triangle_buffer(Model *model, GLuint triangles)
+int model_allocate_triangle_buffer(Model *model, uint32_t triangles)
 {
     if (!model)
     {
@@ -113,18 +113,18 @@ int model_allocate_triangle_buffer(Model *model, GLuint triangles)
         slog("cannot allocate 0 triangles!");
         return -1;
     }
-    model->triangle_array = (GLuint *)malloc(sizeof(GLuint)*3*triangles);
+    model->triangle_array = (uint32_t *)malloc(sizeof(uint32_t)*3*triangles);
     if (!model->triangle_array)
     {
         slog("failed to allocate triangle buffer");
         return -1;
     }
-    memset(model->triangle_array,0,sizeof(GLuint)*3*triangles);
+    memset(model->triangle_array,0,sizeof(uint32_t)*3*triangles);
     model->num_tris = triangles;
     return 0;
 }
 
-int model_set_vertex_buffer(Model *model, float *vertex_buffer, GLuint count)
+int model_set_vertex_buffer(Model *model, float *vertex_buffer, uint32_t count)
 {
     if (model_allocate_vertex_buffer(model, count) != 0)
     {
@@ -134,7 +134,7 @@ int model_set_vertex_buffer(Model *model, float *vertex_buffer, GLuint count)
     return 0;
 }
 
-int model_set_attribute_buffer(Model *model, float *attribute_buffer, GLuint count)
+int model_set_attribute_buffer(Model *model, float *attribute_buffer, uint32_t count)
 {
     if (model_allocate_attribute_buffer(model, count) != 0)
     {
@@ -145,7 +145,7 @@ int model_set_attribute_buffer(Model *model, float *attribute_buffer, GLuint cou
 }
 
 
-int model_allocate_vertex_buffer(Model *model, GLuint vertices)
+int model_allocate_vertex_buffer(Model *model, uint32_t vertices)
 {
     if (!model)
     {
@@ -173,7 +173,7 @@ int model_allocate_vertex_buffer(Model *model, GLuint vertices)
     return 0;
 }
 
-int model_allocate_attribute_buffer(Model *model, GLuint attributes)
+int model_allocate_attribute_buffer(Model *model, uint32_t attributes)
 {
     if (!model)
     {
@@ -205,7 +205,7 @@ int model_allocate_attribute_buffer(Model *model, GLuint attributes)
 size_t model_get_triangle_buffer_size(Model *model)
 {
     if (!model)return 0;
-    return (sizeof(GLshort)*model->num_tris*3);
+    return (sizeof(uint8_t)*model->num_tris*3);
 }
 
 size_t model_get_vertex_buffer_size(Model *model)

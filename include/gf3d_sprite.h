@@ -20,7 +20,7 @@ typedef struct Sprite_T
 /**
  * @brief initializes internal sprite system
  */
-void InitSpriteList();
+void gf3d_sprite_init();
 
 /**
  * @brief Decriments the reference count for the sprite passed.
@@ -28,10 +28,10 @@ void InitSpriteList();
  * 
  * @param img the sprite to free
  */
-void FreeSprite(Sprite *img);
+void gf3d_sprite_free(Sprite *img);
 
 
-Sprite *LoadSprite(char *filename,int sizex, int sizey);
+Sprite *gf3d_sprite_load(char *filename,int sizex, int sizey);
 
 /**
  * @brief draws a specifif sprite to a surface
@@ -42,12 +42,12 @@ Sprite *LoadSprite(char *filename,int sizex, int sizey);
  * @param sy the y position on the surface to draw the sprite at
  * @param frame the sprite frame to draw
  */
-void DrawSprite(Sprite *sprite,SDL_Surface *surface,int sx,int sy, int frame);
+void gf3d_sprite_draw(Sprite *sprite,SDL_Surface *surface,int sx,int sy, int frame);
 
 /**
  * @brief clears all loaded sprites in system.  Called before program exit
  */
-void CloseSprites();
+void gf3d_sprite_close();
 
 
 
