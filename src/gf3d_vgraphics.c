@@ -128,6 +128,7 @@ int gf3d_vgraphics_setup(
 )
 {
     Uint32 flags = SDL_WINDOW_VULKAN;   
+    Uint32 IMG_flags = IMG_INIT_JPG | IMG_INIT_PNG;
     Uint32 i;
     Uint32 enabledExtensionCount = 0;
     VkDeviceCreateInfo createInfo = {0};
@@ -139,7 +140,7 @@ int gf3d_vgraphics_setup(
     }
     atexit(SDL_Quit);
 
-    if(IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) != 0){
+    if(IMG_Init(IMG_flags) != IMG_flags ){
         slog("Unable to initialize IMG: %s", SDL_GetError());
         return -1;
     }
