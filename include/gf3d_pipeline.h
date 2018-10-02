@@ -47,6 +47,6 @@ Pipeline *gf3d_pipeline_graphics_load(VkDevice device,char *vertFile,char *fragF
  * 
  * @param vertex_buffer The allocated & filled VkBuffer for vertexes
  */
-void gf3d_pipeline_give_vertex_buffer(Pipeline *pipe, VkBuffer vertex_buffer);
+void gf3d_pipeline_give_vertex_buffer(Pipeline *pipe, VkBuffer *vertex_buffer);
 
 #endif

@@ -112,9 +112,9 @@ int gf3d_vgraphics_init(
     gf3d_swapchain_setup_frame_buffers(gf3d_vgraphics.pipe);
 
     //Init Vertex Buffers
-    gf3d_vertex_create_buffer(gf3d_vgraphics.gpu, device, gf3d_vgraphics.vertexBuffer, gf3d_vgraphics.vertexBufferMemory);
+    gf3d_vertex_create_buffer(gf3d_vgraphics.gpu, device, &gf3d_vgraphics.vertexBuffer, &gf3d_vgraphics.vertexBufferMemory);
 
-    gf3d_pipeline_give_vertex_buffer(gf3d_vgraphics.pipe, gf3d_vgraphics.vertexBuffer);
+    gf3d_pipeline_give_vertex_buffer(gf3d_vgraphics.pipe, &gf3d_vgraphics.vertexBuffer);
 
     gf3d_command_pool_setup(device,gf3d_swapchain_get_frame_buffer_count(),gf3d_vgraphics.pipe);
     

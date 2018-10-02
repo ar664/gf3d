@@ -69,12 +69,12 @@ void gf3d_command_pool_close()
     memset(&gf3d_commands,0,sizeof(Commands));
 }
 
-void gf3d_command_execute_render_pass(VkCommandBuffer commandBuffer, VkRenderPass renderPass,VkFramebuffer framebuffer,VkPipeline graphicsPipeline, VkBuffer vertex_buffer)
+void gf3d_command_execute_render_pass(VkCommandBuffer commandBuffer, VkRenderPass renderPass,VkFramebuffer framebuffer,VkPipeline graphicsPipeline, VkBuffer *vertex_buffer, size_t i)
 {
     VkClearValue clearColor = {0};
     VkRenderPassBeginInfo renderPassInfo = {0};
     VkCommandBufferBeginInfo beginInfo = {0};
-    VkBuffer vertexBuffers[] = {vertex_buffer};
+    VkBuffer vertexBuffers[] = {*vertex_buffer};
     VkDeviceSize offsets[] = {0};
 
 
@@ -105,9 +105,12 @@ void gf3d_command_execute_render_pass(VkCommandBuffer commandBuffer, VkRenderPas
     //firstVertex: Used as an offset into the vertex buffer, defines the lowest value of gl_VertexIndex.
     //firstInstance: Used as an offset for instanced rendering, defines the lowest value of gl_InstanceIndex.
     
-    vkCmdBindVertexBuffers(commandBuffer, 3, 1, vertexBuffers, offsets);
-    
+    vkCmdBindVertexBuffers(commandBuffer, 3, 1, &vertexBuffers[0], &offsets[0]);
+       
     vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+
+    
+    
     vkCmdEndRenderPass(commandBuffer);
     if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
     {
@@ -129,7 +132,8 @@ void gf3d_command_buffer_begin(Pipeline *pipe)
             pipe->renderPass,
             gf3d_swapchain_get_frame_buffer_by_index(i),
             pipe->graphicsPipeline,
-            pipe->vertexBuffer);
+            pipe->vertexBuffer,
+            i);
     }
 }
 

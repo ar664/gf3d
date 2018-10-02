@@ -4,12 +4,18 @@
 struct VkVertexInputAttributeDescription   sampleAttributeDescription[2];
 struct VkVertexInputBindingDescription     sampleBindingDescription;
 
+struct Vertex sampleVerts[] = {
+    {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+    {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+    {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+};
+
 typedef struct 
 {
     VkPhysicalDevice                    physicalDevice;
     VkDevice                            device;
-    VkBuffer                            vertexBuffer;
-    VkDeviceMemory                      vertexMemory;
+    VkBuffer                            *vertexBuffer;
+    VkDeviceMemory                      *vertexMemory;
 
 }VertexBufferManager;
 
@@ -36,7 +42,7 @@ void gf3d_vertex_init(){
 
 }
 
-void gf3d_vertex_create_buffer(VkPhysicalDevice physicalDevice, VkDevice device, VkBuffer vertexBuffer, VkDeviceMemory vertexBufferMemory){
+void gf3d_vertex_create_buffer(VkPhysicalDevice physicalDevice, VkDevice device, VkBuffer *vertexBuffer, VkDeviceMemory *vertexBufferMemory){
     
     void*                               data;
 
@@ -56,13 +62,13 @@ void gf3d_vertex_create_buffer(VkPhysicalDevice physicalDevice, VkDevice device,
     if(vkCreateBuffer(device,
                       &bufferInfo, 
                       NULL, 
-                      &vertexBuffer) != VK_SUCCESS)
+                      vertexBuffer) != VK_SUCCESS)
     {
         slog("Failed to create vertex buffer");
         return;
     }
 
-    vkGetBufferMemoryRequirements(device, vertexBuffer, &memRequirements);
+    vkGetBufferMemoryRequirements(device, *vertexBuffer, &memRequirements);
 
     allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     allocInfo.allocationSize = memRequirements.size;
@@ -78,24 +84,24 @@ void gf3d_vertex_create_buffer(VkPhysicalDevice physicalDevice, VkDevice device,
     if(vkAllocateMemory(device,
                         &allocInfo,
                         NULL,
-                        &vertexBufferMemory) != VK_SUCCESS)
+                        vertexBufferMemory) != VK_SUCCESS)
     {
         slog("Failed to allocate memory for vertex array");
         return;
     }
 
     if(vkBindBufferMemory(device,
-                          vertexBuffer,
-                          vertexBufferMemory,
+                          *vertexBuffer,
+                          *vertexBufferMemory,
                           0) != VK_SUCCESS)
     {
         slog("Failed to bind memory");
         return;
     }
 
-    vkMapMemory(device, vertexBufferMemory, 0, bufferInfo.size, 0, &data);
+    vkMapMemory(device, *vertexBufferMemory, 0, bufferInfo.size, 0, &data);
     memcpy(data, sampleVerts, (size_t) bufferInfo.size);
-    vkUnmapMemory(device, vertexBufferMemory);
+    vkUnmapMemory(device, *vertexBufferMemory);
 
     gf3d_vertex_manager.vertexBuffer = vertexBuffer;
     gf3d_vertex_manager.vertexMemory = vertexBufferMemory;

@@ -17,7 +17,7 @@ void gf3d_command_pool_setup(VkDevice device,Uint32 count,Pipeline *pipe);
 /**
  * @brief execute a render pass
  */
-void gf3d_command_execute_render_pass(VkCommandBuffer commandBuffer, VkRenderPass renderPass,VkFramebuffer framebuffer,VkPipeline graphicsPipeline, VkBuffer vertex_buffer);
+void gf3d_command_execute_render_pass(VkCommandBuffer commandBuffer, VkRenderPass renderPass,VkFramebuffer framebuffer,VkPipeline graphicsPipeline, VkBuffer *vertex_buffer, size_t i);
 
 /**
  * @brief get a command buffer by index
