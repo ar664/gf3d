@@ -6,13 +6,17 @@ struct VkVertexInputBindingDescription     sampleBindingDescription;
 
 typedef struct 
 {
+    VkPhysicalDevice                    physicalDevice;
     VkDevice                            device;
     VkBuffer                            vertexBuffer;
     VkDeviceMemory                      vertexMemory;
 
 }VertexBufferManager;
 
-
+VkBufferCreateInfo                  bufferInfo;
+VkMemoryAllocateInfo                allocInfo;
+VkMemoryRequirements                memRequirements;
+VkPhysicalDeviceMemoryProperties    memProperties;
 VkBuffer vertexBufferGod;
 static VertexBufferManager gf3d_vertex_manager = {0};
 uint32_t gf3d_find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties, VkPhysicalDeviceMemoryProperties *memProperties);
@@ -32,11 +36,8 @@ void gf3d_vertex_init(){
 
 }
 
-void gf3d_vertex_create_buffer(VkDevice device, VkBuffer vertexBuffer, VkDeviceMemory vertexBufferMemory){
-    VkBufferCreateInfo                  bufferInfo;
-    VkMemoryAllocateInfo                allocInfo;
-    VkMemoryRequirements                memRequirements;
-    VkPhysicalDeviceMemoryProperties    memProperties;
+void gf3d_vertex_create_buffer(VkPhysicalDevice physicalDevice, VkDevice device, VkBuffer vertexBuffer, VkDeviceMemory vertexBufferMemory){
+    
     void*                               data;
 
     /* if(!vertexBuffer || !vertexBufferMemory)
@@ -46,9 +47,10 @@ void gf3d_vertex_create_buffer(VkDevice device, VkBuffer vertexBuffer, VkDeviceM
     } */
     
     gf3d_vertex_manager.device = device;
+    gf3d_vertex_manager.physicalDevice = physicalDevice;
 
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    bufferInfo.size = sizeof(struct Vertex) * 3;    /*< HARD CODED VALUE, EDIT LATER */
+    bufferInfo.size = sizeof(sampleVerts) * sizeof(sampleVerts[0]);    /*< HARD CODED VALUE, EDIT LATER */
     bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
     bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
     if(vkCreateBuffer(device,
@@ -104,8 +106,8 @@ void gf3d_vertex_create_buffer(VkDevice device, VkBuffer vertexBuffer, VkDeviceM
 
 uint32_t gf3d_find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties, VkPhysicalDeviceMemoryProperties *memProperties){
     int i;
-    vkGetPhysicalDeviceMemoryProperties((VkPhysicalDevice)gf3d_vertex_manager.device, memProperties);
-    
+    vkGetPhysicalDeviceMemoryProperties(gf3d_vertex_manager.physicalDevice, memProperties);
+
     for(i = 0; i < memProperties->memoryTypeCount; i++)
     {
         if ((typeFilter & (1 << i)) && (memProperties->memoryTypes[i].propertyFlags & properties) == properties) 
