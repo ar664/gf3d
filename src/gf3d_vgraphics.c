@@ -2,10 +2,13 @@
  * @purpose vulkan graphics setup and abstraction
 */
 
-#include <SDL.h>
-#include <SDL_vulkan.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_vulkan.h>
+#include <SDL2/SDL_image.h>
 #include <vulkan/vulkan.h>
 #include <limits.h>
+#include <string.h>
+#include <stdio.h>
 
 #include "gf3d_vector.h"
 #include "gf3d_types.h"
@@ -133,7 +136,8 @@ int gf3d_vgraphics_setup(
     Bool enableValidation
 )
 {
-    Uint32 flags = SDL_WINDOW_VULKAN;
+    Uint32 flags = SDL_WINDOW_VULKAN;   
+    Uint32 IMG_flags = IMG_INIT_JPG | IMG_INIT_PNG;
     Uint32 i;
     Uint32 enabledExtensionCount = 0;
     VkDeviceCreateInfo createInfo = {0};
@@ -144,6 +148,12 @@ int gf3d_vgraphics_setup(
         return -1;
     }
     atexit(SDL_Quit);
+
+    if(IMG_Init(IMG_flags) != IMG_flags ){
+        slog("Unable to initialize IMG: %s", SDL_GetError());
+        return -1;
+    }
+
     if (fullscreen)
     {
         if (renderWidth == 0)

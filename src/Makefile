@@ -16,7 +16,7 @@ CC      = gcc
 
 LIB_PATH = ../libs
 STATIC_LIBS = libsj.a
-VULKAN_LIB = /home/djkehoe/git/vulkan1.1.82.0/x86_64
+VULKAN_LIB = /home/junji/vulkan/x86_64
 LDFLAGS = -L$(VULKAN_LIB)/lib -L$(LIB_PATH) $(foreach d, $(STATIC_LIBS),$(LIB_PATH)/$d)
 
 OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
@@ -25,9 +25,9 @@ INC_PATHS = ../include ../libs/include
 INC_PARAMS =$(foreach d, $(INC_PATHS), -I$d)
 
 SDL_CFLAGS = `sdl2-config --cflags` $(INC_PARAMS)
-SDL_LDFLAGS = `sdl2-config --libs` -lSDL2_image -lpng -ljpeg -lz -lGL -lGLEW -lvulkan
-LFLAGS = -g  -o ../$(PROJECT) -lm
-CFLAGS = -g  -fPIC -Wall -pedantic -std=gnu99 -fgnu89-inline -Wno-unknown-pragmas -Wno-variadic-macros
+SDL_LDFLAGS = `sdl2-config --libs` -lSDL2_image -ludev -lpng -ljpeg -lz -lGL -lGLEW -lvulkan
+LFLAGS = -g -o ../$(PROJECT) -lm
+CFLAGS = -g -fPIC -Wall -pedantic -std=gnu99 -fgnu89-inline -Wno-unknown-pragmas -Wno-variadic-macros
 # -ffast-math for relase version
 
 DOXYGEN = doxygen

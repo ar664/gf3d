@@ -1,5 +1,4 @@
 #include <SDL.h>            
-#include <GL/glew.h>
 
 #include "simple_logger.h"
 #include "gf3d_vgraphics.h"
@@ -8,11 +7,15 @@
 #include "gf3d_matrix.h"
 #include "gf3d_camera.h"
 #include "entity.h"
+#include "gf3d_object.h"
+#include "gf3d_sprite.h"
 
 int main(int argc,char *argv[])
 {
     int done = 0;
     const Uint8 * keys;
+    Object *sample_object;
+    Sprite *sample_sprite;
     
     init_logger("gf3d.log");
     slog("gf3d begin");
@@ -29,6 +32,11 @@ int main(int argc,char *argv[])
         slog("Fail to initialize graphics, exiting...");
         return -1;
     }
+
+    gf3d_object_init();
+    gf3d_sprite_init();
+    //sample_object = gf3d_object_load("models/chalet.obj");
+    sample_sprite = gf3d_sprite_load("textures/sample.png", 1024,1024);
     
     // main game loop
     while(!done)
