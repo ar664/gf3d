@@ -56,7 +56,7 @@ void gf3d_vertex_create_buffer(VkPhysicalDevice physicalDevice, VkDevice device,
     gf3d_vertex_manager.physicalDevice = physicalDevice;
 
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    bufferInfo.size = sizeof(sampleVerts) * sizeof(sampleVerts[0]);    /*< HARD CODED VALUE, EDIT LATER */
+    bufferInfo.size = sizeof(sampleVerts) * sizeof(sampleVerts[0]);
     bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
     bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
     if(vkCreateBuffer(device,
@@ -125,7 +125,12 @@ uint32_t gf3d_find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags proper
 }
 
 void gf3d_vertex_shutdown(){
-    
-    vkDestroyBuffer(gf3d_vertex_manager.device, gf3d_vertex_manager.vertexBuffer, NULL);
-    vkFreeMemory(gf3d_vertex_manager.device, gf3d_vertex_manager.vertexMemory, NULL);
+    if(gf3d_vertex_manager.vertexBuffer)
+    {
+        vkDestroyBuffer(gf3d_vertex_manager.device, gf3d_vertex_manager.vertexBuffer, NULL);
+    }
+    if(gf3d_vertex_manager.vertexMemory)
+    {
+        vkFreeMemory(gf3d_vertex_manager.device, gf3d_vertex_manager.vertexMemory, NULL);
+    }
 }

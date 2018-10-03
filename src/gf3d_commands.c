@@ -105,9 +105,9 @@ void gf3d_command_execute_render_pass(VkCommandBuffer commandBuffer, VkRenderPas
     //firstVertex: Used as an offset into the vertex buffer, defines the lowest value of gl_VertexIndex.
     //firstInstance: Used as an offset for instanced rendering, defines the lowest value of gl_InstanceIndex.
     
-    vkCmdBindVertexBuffers(commandBuffer, 3, 1, &vertexBuffers[0], &offsets[0]);
+    vkCmdBindVertexBuffers(commandBuffer, 0, 1, &vertexBuffers[0], &offsets[0]);
        
-    vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+    vkCmdDraw(commandBuffer, sizeof(vertexBuffers[0]), 1, 0, 1);
 
     
     
