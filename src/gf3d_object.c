@@ -100,26 +100,26 @@ void object_allocate(Object *model)
     if (!model)return;
     if (model->num_vertices)
     {
-        model->vertex_array = malloc(sizeof(float)*3*model->num_vertices);
+        model->vertex_array = malloc(sizeof(double)*3*model->num_vertices);
         if (model->vertex_array)
         {
-            memset(model->vertex_array,0,sizeof(float)*3*model->num_vertices);
+            memset(model->vertex_array,0,sizeof(double)*3*model->num_vertices);
         }
     }
     if (model->num_normals)
     {
-        model->normal_array = malloc(sizeof(float)*3*model->num_normals);
+        model->normal_array = malloc(sizeof(double)*3*model->num_normals);
         if (model->normal_array)
         {
-            memset(model->normal_array,0,sizeof(float)*3*model->num_normals);
+            memset(model->normal_array,0,sizeof(double)*3*model->num_normals);
         }
     }
     if (model->num_texels)
     {
-        model->texel_array = malloc(sizeof(float)*2*model->num_texels);
+        model->texel_array = malloc(sizeof(double)*2*model->num_texels);
         if (model->texel_array)
         {
-            memset(model->texel_array,0,sizeof(float)*2*model->num_texels);
+            memset(model->texel_array,0,sizeof(double)*2*model->num_texels);
         }
     }
     if (model->num_triangles)
@@ -267,7 +267,7 @@ Object *gf3d_object_load(char *filename)
     return objFile;
 }
 
-static void gf3d_object_delete(Object *obj)
+void gf3d_object_delete(Object *obj)
 {
     if (!obj)return;
     

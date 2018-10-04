@@ -54,6 +54,7 @@ int main(int argc,char *argv[])
     vkDeviceWaitIdle(gf3d_vgraphics_get_default_logical_device());    
     //cleanup
     gf3d_sprite_free(sample_sprite);
+    gf3d_object_delete(sample_object);
     slog("gf3d program end");
     slog_sync();
     return 0;

@@ -76,6 +76,6 @@ Object *gf3d_object_load(char *filename);
  * 
  * @param object    The object to free.
  */
-static void gf3d_object_delete(Object *object);
+void gf3d_object_delete(Object *object);
 
 #endif

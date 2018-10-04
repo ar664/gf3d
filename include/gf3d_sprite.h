@@ -1,5 +1,5 @@
-#ifndef __SPRITE__
-#define __SPRITE__
+#ifndef __SPRITE_H
+#define __SPRITE_H
 
 #include <SDL2/SDL.h>
 
