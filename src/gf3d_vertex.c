@@ -127,10 +127,10 @@ uint32_t gf3d_find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags proper
 void gf3d_vertex_shutdown(){
     if(gf3d_vertex_manager.vertexBuffer)
     {
-        vkDestroyBuffer(gf3d_vertex_manager.device, gf3d_vertex_manager.vertexBuffer, NULL);
+        vkDestroyBuffer(gf3d_vertex_manager.device, *gf3d_vertex_manager.vertexBuffer, NULL);
     }
     if(gf3d_vertex_manager.vertexMemory)
     {
-        vkFreeMemory(gf3d_vertex_manager.device, gf3d_vertex_manager.vertexMemory, NULL);
+        vkFreeMemory(gf3d_vertex_manager.device, *gf3d_vertex_manager.vertexMemory, NULL);
     }
 }

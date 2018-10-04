@@ -267,7 +267,7 @@ Object *gf3d_object_load(char *filename)
     return objFile;
 }
 
-static void object_delete(Object *obj)
+static void gf3d_object_delete(Object *obj)
 {
     if (!obj)return;
     
@@ -297,7 +297,7 @@ static void object_close()
     {
         if (ObjectList[i].ref_count)
         {
-            object_delete(&ObjectList[i]);
+            gf3d_object_delete(&ObjectList[i]);
         }
     }
 }

@@ -71,5 +71,11 @@ void gf3d_object_init();
  */
 Object *gf3d_object_load(char *filename);
 
+/**
+ * @brief Free the objects children from memory and set it to 0.
+ * 
+ * @param object    The object to free.
+ */
+static void gf3d_object_delete(Object *object);
 
 #endif

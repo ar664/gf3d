@@ -419,6 +419,7 @@ void gf3d_vgraphics_render()
     if (vkQueueSubmit(gf3d_vqueues_get_graphics_queue(), 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS)
     {
         slog("failed to submit draw command buffer!");
+        exit(1);
     }
     
     presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;

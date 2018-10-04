@@ -35,7 +35,7 @@ int main(int argc,char *argv[])
 
     gf3d_object_init();
     gf3d_sprite_init();
-    //sample_object = gf3d_object_load("models/chalet.obj");
+    sample_object = gf3d_object_load("models/sample2.obj");
     sample_sprite = gf3d_sprite_load("textures/sample.png", 1024,1024);
     
     // main game loop
@@ -53,6 +53,7 @@ int main(int argc,char *argv[])
     
     vkDeviceWaitIdle(gf3d_vgraphics_get_default_logical_device());    
     //cleanup
+    gf3d_sprite_free(sample_sprite);
     slog("gf3d program end");
     slog_sync();
     return 0;

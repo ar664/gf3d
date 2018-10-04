@@ -1,13 +1,10 @@
 #include "gf3d_pipeline.h"
 #include "gf3d_swapchain.h"
 #include "gf3d_shaders.h"
-<<<<<<< HEAD
 #include "gf3d_vertex.h"
-=======
 
 #include <string.h>
 #include <stdio.h>
->>>>>>> obj_loader
 #include "simple_logger.h"
 
 typedef struct
