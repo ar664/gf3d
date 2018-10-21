@@ -716,6 +716,12 @@ void gf3d_vgraphics_rotate_camera(float degrees)
 
 }
 
+void gf3d_vgraphics_move_model(Vector3D pos)
+{
+    gf3d_matrix_make_translation(gf3d_vgraphics.ubo.model, pos);
+}
+
+
 Pipeline *gf3d_vgraphics_get_graphics_pipeline()
 {
     return gf3d_vgraphics.pipe;

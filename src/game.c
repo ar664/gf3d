@@ -40,8 +40,9 @@ int main(int argc,char *argv[])
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         //update game things here
         
+        //gf3d_vgraphics_move_model(vector3d(0,0,1));
         gf3d_vgraphics_rotate_camera(0.001);
-        
+    
         // configure render command for graphics command pool
         // for each mesh, get a command and configure it from the pool
         bufferFrame = gf3d_vgraphics_render_begin();

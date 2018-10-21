@@ -118,4 +118,6 @@ void gf3d_matrix_rotate(
     Vector3D    axis
 );
 
+void gf3d_matrix_translate( Matrix4 out, Vector3D move);
+
 #endif
