@@ -9,6 +9,7 @@
 #include "gf3d_camera.h"
 #include "gf3d_vector.h"
 #include "gf3d_texture.h"
+#include "entity.h"
 
 int main(int argc,char *argv[])
 {
@@ -16,11 +17,13 @@ int main(int argc,char *argv[])
     const Uint8 * keys;
     Uint32 bufferFrame = 0;
     VkCommandBuffer commandBuffer;
+    entity_t *entity1;
     Model *model;
     Model *model2;
     
     init_logger("gf3d.log");    
     slog("gf3d begin");
+    entity_system_init();
     gf3d_vgraphics_init(
         "gf3d",                 //program name
         1200,                   //screen width
@@ -32,14 +35,16 @@ int main(int argc,char *argv[])
     
     // main game loop
     slog("gf3d main loop begin");
-    model = gf3d_model_load("agumon");
-    model2 = gf3d_model_load("cube");
+    entity1 = entity_load("agumon");
+    //model = gf3d_model_load("agumon");
+    //model2 = gf3d_model_load("cube");
     while(!done)
     {
         SDL_PumpEvents();   // update SDL's internal event structures
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         //update game things here
-        
+        entity_system_think();
+
         //gf3d_vgraphics_move_model(vector3d(0,0,1));
         gf3d_vgraphics_rotate_camera(0.001);
     
@@ -48,8 +53,8 @@ int main(int argc,char *argv[])
         bufferFrame = gf3d_vgraphics_render_begin();
         commandBuffer = gf3d_command_rendering_begin(bufferFrame);
 
-            gf3d_model_draw(model,bufferFrame,commandBuffer);
-            gf3d_model_draw(model2,bufferFrame,commandBuffer);
+            entity_system_draw(bufferFrame, commandBuffer);
+            //gf3d_model_draw(model2,bufferFrame,commandBuffer);
             
         gf3d_command_rendering_end(commandBuffer);
         gf3d_vgraphics_render_end(bufferFrame);

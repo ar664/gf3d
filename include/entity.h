@@ -52,9 +52,17 @@ void entity_system_init();
 /**
  * @brief Create a new entity, uses entity list
  * 
- * @return entity_t* that has been allocated
+ * @return entity_t* That has been allocated
  */
 entity_t *entity_new();
+
+/**
+ * @brief Load an entity with a model
+ * 
+ * @param   model     The model associated with this entity.
+ * @return  entity_t* That has been allocated and set
+ */
+entity_t *entity_load(char *model);
 
 /**
  * @brief Updates the entities every frame
@@ -63,10 +71,16 @@ entity_t *entity_new();
 void entity_system_think();
 
 /**
+ * @brief Draw all entities on the screen
+ * 
+ */
+void entity_system_draw(Uint32 bufferFrame, VkCommandBuffer commandBuffer);
+
+/**
  * @brief Destroys all entities before exit
  * 
  */
-void entity_system_shutdown();
+//void entity_system_shutdown();
 
 /**
  * @brief Destroys an entity on exit/during runtime

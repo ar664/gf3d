@@ -5,6 +5,10 @@
 
 entity_t* entity_list;
 
+void entity_generic_think(entity_t *self);
+void entity_generic_draw(entity_t *self, Uint32 bufferFrame, VkCommandBuffer commandBuffer);
+
+void entity_system_shutdown();
 
 void entity_system_init(){
     int i;
@@ -25,10 +29,19 @@ entity_t *entity_new(){
     for(i = 0; i < ENTITY_MAX;i++){
         if(!entity_list[i].in_use){
             entity_list[i].in_use = 1;
-            entity_list[i].Destroy = entity_generic_destroy;
+            entity_list[i].Destroy = (void*) entity_generic_destroy;
+            return &entity_list[i];
         }
     }
     return NULL;
+}
+
+entity_t *entity_load(char *model){
+    entity_t *ent;
+    ent = entity_new();
+    ent->model = gf3d_model_load(model);
+    ent->Think = entity_generic_think;
+    return ent;
 }
 
 void entity_generic_think(entity_t *self){
@@ -41,6 +54,14 @@ void entity_generic_think(entity_t *self){
     if(time > self->think_next){
         return;
     }
+}
+
+void entity_generic_draw(entity_t *self, Uint32 bufferFrame, VkCommandBuffer commandBuffer){
+    if(!self){
+        slog("Tried to draw NULL entity");
+        return;
+    }
+    gf3d_model_draw(self->model, bufferFrame, commandBuffer);
 }
 
 void entity_generic_destroy(entity_t *self){
@@ -56,6 +77,15 @@ void entity_system_think(){
     for(i = 0; i < ENTITY_MAX; i++){
         if(entity_list[i].Think){
             entity_list[i].Think(&entity_list[i]);
+        }
+    }
+}
+
+void entity_system_draw(Uint32 bufferFrame, VkCommandBuffer commandBuffer){
+    int i;
+    for(i = 0; i < ENTITY_MAX; i++){
+        if(entity_list[i].model){
+            entity_generic_draw(&entity_list[i], bufferFrame, commandBuffer);
         }
     }
 }
