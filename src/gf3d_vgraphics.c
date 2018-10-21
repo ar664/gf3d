@@ -472,7 +472,7 @@ void gf3d_vgraphics_render_end(Uint32 imageIndex)
     VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
     swapChains[0] = gf3d_swapchain_get();
 
-    gf3d_vgraphics_update_uniform_buffer(imageIndex);
+    //gf3d_vgraphics_update_uniform_buffer(imageIndex);
 
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
@@ -715,6 +715,21 @@ void gf3d_vgraphics_rotate_camera(float degrees)
         vector3d(0,0,1));
 
 }
+
+void gf3d_vgraphics_update_ubo(UniformBufferObject *ubo, uint32_t currentImage)
+{
+    void* data;
+    if(!ubo){
+        slog("ubo update");
+        return;
+    }
+    vkMapMemory(gf3d_vgraphics.device, gf3d_vgraphics.uniformBuffersMemory[currentImage], 0, sizeof(UniformBufferObject), 0, &data);
+    
+        memcpy(data, ubo, sizeof(UniformBufferObject));
+
+    vkUnmapMemory(gf3d_vgraphics.device, gf3d_vgraphics.uniformBuffersMemory[currentImage]);
+}
+
 
 void gf3d_vgraphics_move_model(Vector3D pos)
 {

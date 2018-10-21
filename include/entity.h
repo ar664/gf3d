@@ -2,6 +2,7 @@
 #define __ENTITY_H
 
 #include "gf3d_model.h"
+#include "gf3d_matrix.h"
 #include "gf3d_vector.h"
 
 #define ENTITY_MAX 1000
@@ -24,19 +25,20 @@ enum Layer {
  */ 
 struct entity_s{
 
-    int         think_next;        /**< Next time to update this entity */
-    int         in_use;             /**< Check whether this entity spot is in use */
+    int                     think_next;        /**< Next time to update this entity */
+    int                     in_use;             /**< Check whether this entity spot is in use */
 
-    entity_t   *parent;             /**< The parent of this entity (E.g. Rocket->Player) */
-    
-    Model      *model;              /**< The object for the model */
+    entity_t               *parent;             /**< The parent of this entity (E.g. Rocket->Player) */
 
-    Vector3D    pos;                /**< Position for physics */
-    Vector3D    velocity;           /**< Velocity for physics */
-    Vector3D    acceleration;       /**<  Acceleration for physics*/
+    Model                  *model;              /**< The object for the model */
+    UniformBufferObject     ubo;                /**< The ubo for drawing */
 
-    Vector3D    axis;               /**< Axis of rotation */
-    Vector3D    rotation;           /**< Rotational Velocity */
+    Vector3D                pos;                /**< Position for physics */
+    Vector3D                velocity;           /**< Velocity for physics */
+    Vector3D                acceleration;       /**<  Acceleration for physics*/
+
+    Vector3D                axis;               /**< Axis of rotation */
+    Vector3D                rotation;           /**< Rotational Velocity */
 
     void (*Think)(entity_t *self);
     void (*Update)(entity_t *self);

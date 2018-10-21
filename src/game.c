@@ -17,7 +17,7 @@ int main(int argc,char *argv[])
     const Uint8 * keys;
     Uint32 bufferFrame = 0;
     VkCommandBuffer commandBuffer;
-    entity_t *entity1;
+    entity_t *entity1, *entity2;
     Model *model;
     Model *model2;
     
@@ -36,6 +36,7 @@ int main(int argc,char *argv[])
     // main game loop
     slog("gf3d main loop begin");
     entity1 = entity_load("agumon");
+    entity2 = entity_load("cube");
     //model = gf3d_model_load("agumon");
     //model2 = gf3d_model_load("cube");
     while(!done)
@@ -46,6 +47,7 @@ int main(int argc,char *argv[])
         entity_system_think();
 
         //gf3d_vgraphics_move_model(vector3d(0,5,10));
+        entity2->pos.x += 0.01;
         gf3d_vgraphics_rotate_camera(0.001);
     
         // configure render command for graphics command pool

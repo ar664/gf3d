@@ -2,6 +2,7 @@
 #include <string.h>
 #include "entity.h"
 #include "simple_logger.h"
+#include "gf3d_vgraphics.h"
 
 entity_t* entity_list;
 
@@ -20,6 +21,23 @@ void entity_system_init(){
     }
     for(i = 0; i < ENTITY_MAX; i++){
         memset(&entity_list[i], 0, sizeof(struct entity_s));
+        gf3d_matrix_identity(entity_list[i].ubo.model);
+        gf3d_matrix_identity(entity_list[i].ubo.proj);
+        gf3d_matrix_identity(entity_list[i].ubo.view);
+        gf3d_matrix_view(
+            entity_list[i].ubo.view,
+            vector3d(2,20,2),
+            vector3d(0,0,0),
+            vector3d(0,0,1)
+        );
+        gf3d_matrix_perspective(
+            entity_list[i].ubo.proj,
+            45 * GF3D_DEGTORAD,
+            1200/(float)700,
+            0.1f,
+            100
+        );
+        entity_list[i].ubo.proj[1][1] *= -1;
     }
     atexit(entity_system_shutdown);
 }
@@ -56,12 +74,28 @@ void entity_generic_think(entity_t *self){
     }
 }
 
+void entity_set_draw_position(entity_t *self){
+    if(!self){
+        slog("Tried to set position NULL entity");
+        return;
+    }
+    self->ubo.model[3][0] = self->pos.x;
+    self->ubo.model[3][1] = self->pos.y;
+    self->ubo.model[3][2] = self->pos.z;
+    
+}
+
 void entity_generic_draw(entity_t *self, Uint32 bufferFrame, VkCommandBuffer commandBuffer){
     if(!self){
         slog("Tried to draw NULL entity");
         return;
     }
+    entity_set_draw_position(self);
+    //commandBuffer = gf3d_command_rendering_begin(bufferFrame);
     gf3d_model_draw(self->model, bufferFrame, commandBuffer);
+    //gf3d_command_rendering_end(commandBuffer);
+    gf3d_vgraphics_update_ubo(&self->ubo, bufferFrame);
+    //gf3d_vgraphics_render_end(bufferFrame);
 }
 
 void entity_generic_destroy(entity_t *self){
