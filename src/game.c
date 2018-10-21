@@ -45,7 +45,7 @@ int main(int argc,char *argv[])
         //update game things here
         entity_system_think();
 
-        //gf3d_vgraphics_move_model(vector3d(0,0,1));
+        //gf3d_vgraphics_move_model(vector3d(0,5,10));
         gf3d_vgraphics_rotate_camera(0.001);
     
         // configure render command for graphics command pool
