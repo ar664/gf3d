@@ -48,6 +48,10 @@ int main(int argc,char *argv[])
 
         //gf3d_vgraphics_move_model(vector3d(0,5,10));
         entity2->pos.x += 0.005;
+        if(entity2->pos.x > 1){
+            entity2->Destroy(entity2);
+            entity2 = entity_load("agumon");
+        }
         gf3d_vgraphics_rotate_camera(0.001);
     
         // configure render command for graphics command pool

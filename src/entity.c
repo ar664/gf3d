@@ -21,23 +21,7 @@ void entity_system_init(){
     }
     for(i = 0; i < ENTITY_MAX; i++){
         memset(&entity_list[i], 0, sizeof(entity_t));
-        gf3d_matrix_identity(entity_list[i].ubo.model);
-        gf3d_matrix_identity(entity_list[i].ubo.proj);
-        gf3d_matrix_identity(entity_list[i].ubo.view);
-        gf3d_matrix_view(
-            entity_list[i].ubo.view,
-            vector3d(2,20,2),
-            vector3d(0,0,0),
-            vector3d(0,0,1)
-        );
-        gf3d_matrix_perspective(
-            entity_list[i].ubo.proj,
-            45 * GF3D_DEGTORAD,
-            1200/(float)700,
-            0.1f,
-            100
-        );
-        entity_list[i].ubo.proj[1][1] *= -1;
+        
     }
     atexit(entity_system_shutdown);
 }
@@ -59,6 +43,23 @@ entity_t *entity_load(char *model){
     ent = entity_new();
     ent->model = gf3d_model_load(model);
     ent->Think = &entity_generic_think;
+    gf3d_matrix_identity(ent->ubo.model);
+    gf3d_matrix_identity(ent->ubo.proj);
+    gf3d_matrix_identity(ent->ubo.view);
+    gf3d_matrix_view(
+        ent->ubo.view,
+        vector3d(2,20,2),
+        vector3d(0,0,0),
+        vector3d(0,0,1)
+    );
+    gf3d_matrix_perspective(
+        ent->ubo.proj,
+        45 * GF3D_DEGTORAD,
+        1200/(float)700,
+        0.1f,
+        100
+    );
+    ent->ubo.proj[1][1] *= -1;
     return ent;
 }
 
@@ -104,6 +105,11 @@ void entity_generic_destroy(entity_t *self){
         return;
     }
     self->in_use = 0;
+    if(self->model){
+        gf3d_model_free(self->model);
+    }
+    memset(self, 0, sizeof(entity_t));
+    
 }
 
 void entity_system_think(){
