@@ -20,7 +20,7 @@ void entity_system_init(){
         return;
     }
     for(i = 0; i < ENTITY_MAX; i++){
-        memset(&entity_list[i], 0, sizeof(struct entity_s));
+        memset(&entity_list[i], 0, sizeof(entity_t));
         gf3d_matrix_identity(entity_list[i].ubo.model);
         gf3d_matrix_identity(entity_list[i].ubo.proj);
         gf3d_matrix_identity(entity_list[i].ubo.view);
@@ -47,7 +47,7 @@ entity_t *entity_new(){
     for(i = 0; i < ENTITY_MAX;i++){
         if(!entity_list[i].in_use){
             entity_list[i].in_use = 1;
-            entity_list[i].Destroy = (void*) entity_generic_destroy;
+            entity_list[i].Destroy = &entity_generic_destroy;
             return &entity_list[i];
         }
     }
@@ -58,7 +58,7 @@ entity_t *entity_load(char *model){
     entity_t *ent;
     ent = entity_new();
     ent->model = gf3d_model_load(model);
-    ent->Think = entity_generic_think;
+    ent->Think = &entity_generic_think;
     return ent;
 }
 
@@ -91,10 +91,10 @@ void entity_generic_draw(entity_t *self, Uint32 bufferFrame, VkCommandBuffer com
         return;
     }
     entity_set_draw_position(self);
-    //commandBuffer = gf3d_command_rendering_begin(bufferFrame);
-    gf3d_model_draw(self->model, bufferFrame, commandBuffer);
-    //gf3d_command_rendering_end(commandBuffer);
     gf3d_vgraphics_update_ubo(&self->ubo, bufferFrame);
+    commandBuffer = gf3d_command_rendering_begin(bufferFrame);
+    gf3d_model_draw(self->model, bufferFrame, commandBuffer);
+    gf3d_command_rendering_end(commandBuffer);
     //gf3d_vgraphics_render_end(bufferFrame);
 }
 

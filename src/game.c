@@ -47,7 +47,7 @@ int main(int argc,char *argv[])
         entity_system_think();
 
         //gf3d_vgraphics_move_model(vector3d(0,5,10));
-        entity2->pos.x += 0.01;
+        entity2->pos.x += 0.005;
         gf3d_vgraphics_rotate_camera(0.001);
     
         // configure render command for graphics command pool
@@ -58,7 +58,7 @@ int main(int argc,char *argv[])
             entity_system_draw(bufferFrame, commandBuffer);
             //gf3d_model_draw(model2,bufferFrame,commandBuffer);
             
-        gf3d_command_rendering_end(commandBuffer);
+        //gf3d_command_rendering_end(commandBuffer);
         gf3d_vgraphics_render_end(bufferFrame);
 
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
