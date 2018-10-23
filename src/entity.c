@@ -2,9 +2,11 @@
 #include <string.h>
 #include "entity.h"
 #include "simple_logger.h"
+#include "SDL.h"
 #include "gf3d_vgraphics.h"
 
 entity_t* entity_list;
+Uint8 *entity_keys = NULL;
 
 void entity_generic_think(entity_t *self);
 void entity_generic_draw(entity_t *self, Uint32 bufferFrame, VkCommandBuffer commandBuffer);
@@ -73,6 +75,18 @@ void entity_generic_think(entity_t *self){
     if(time > self->think_next){
         return;
     }
+
+    if(entity_keys[SDL_SCANCODE_W]){
+        self->pos.y += 0.005;
+    } else if(entity_keys[SDL_SCANCODE_S]){
+        self->pos.y -= 0.005;
+    } else if(entity_keys[SDL_SCANCODE_A]){
+        self->pos.x += 0.005;
+    } else if(entity_keys[SDL_SCANCODE_D]){
+        self->pos.x -= 0.005;
+    }
+
+    //self->pos.x += 0.005;
 }
 
 void entity_set_draw_position(entity_t *self){
@@ -112,8 +126,9 @@ void entity_generic_destroy(entity_t *self){
     
 }
 
-void entity_system_think(){
+void entity_system_think(Uint8 *keys){
     int i;
+    entity_keys = keys;
     for(i = 0; i < ENTITY_MAX; i++){
         if(entity_list[i].Think){
             entity_list[i].Think(&entity_list[i]);

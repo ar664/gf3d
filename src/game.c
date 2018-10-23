@@ -23,6 +23,7 @@ int main(int argc,char *argv[])
     
     init_logger("gf3d.log");    
     slog("gf3d begin");
+    srand(time(NULL));
     entity_system_init();
     gf3d_vgraphics_init(
         "gf3d",                 //program name
@@ -44,20 +45,25 @@ int main(int argc,char *argv[])
         SDL_PumpEvents();   // update SDL's internal event structures
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         //update game things here
-        entity_system_think();
+        entity_system_think(keys);
 
         //gf3d_vgraphics_move_model(vector3d(0,5,10));
-        entity2->pos.x += 0.005;
+        //entity2->pos.x += 0.005;
         if(entity2->pos.x > 1){
             entity2->Destroy(entity2);
-            entity2 = entity_load("agumon");
+            if(rand()%2){
+                entity2 = entity_load("agumon");
+            } else {
+                entity2 = entity_load("cube");
+            }
+            
         }
         gf3d_vgraphics_rotate_camera(0.001);
     
         // configure render command for graphics command pool
         // for each mesh, get a command and configure it from the pool
         bufferFrame = gf3d_vgraphics_render_begin();
-        commandBuffer = gf3d_command_rendering_begin(bufferFrame);
+        //commandBuffer = gf3d_command_rendering_begin(bufferFrame);
 
             entity_system_draw(bufferFrame, commandBuffer);
             //gf3d_model_draw(model2,bufferFrame,commandBuffer);

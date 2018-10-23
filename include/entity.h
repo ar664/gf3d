@@ -70,7 +70,7 @@ entity_t *entity_load(char *model);
  * @brief Updates the entities every frame
  * 
  */
-void entity_system_think();
+void entity_system_think(Uint8 *keys);
 
 /**
  * @brief Draw all entities on the screen
