@@ -7,6 +7,10 @@
 
 entity_t* entity_list;
 Uint8 *entity_keys = NULL;
+const Vector3D AXIS_X = {1,0,0};
+const Vector3D AXIS_Y = {0,1,0};
+const Vector3D AXIS_Z = {0,0,1};
+
 
 void entity_generic_think(entity_t *self);
 void entity_generic_draw(entity_t *self, Uint32 bufferFrame, VkCommandBuffer commandBuffer);
@@ -62,6 +66,7 @@ entity_t *entity_load(char *model){
         100
     );
     ent->ubo.proj[1][1] *= -1;
+    ent->scale = 1;
     return ent;
 }
 
@@ -86,18 +91,50 @@ void entity_generic_think(entity_t *self){
         self->pos.x -= 0.005;
     }
 
+    if(entity_keys[SDL_SCANCODE_X]){
+        self->relative_rotation.x += 0.005;
+    } else if(entity_keys[SDL_SCANCODE_Y]){
+        self->relative_rotation.y += 0.005;
+    } else if (entity_keys[SDL_SCANCODE_Z]){
+        self->relative_rotation.z += 0.005;
+    }
+
+    vector3d_add(self->rotation, self->relative_rotation, self->rotation);  //Keeping track of overall rotation
+
+    if(entity_keys[SDL_SCANCODE_E]){
+        self->scale += 0.005;
+    } else if (entity_keys[SDL_SCANCODE_Q]){
+        self->scale -= 0.005;
+    }
+
     //self->pos.x += 0.005;
 }
 
-void entity_set_draw_position(entity_t *self){
+void entity_set_draw_ubo(entity_t *self){
     if(!self){
         slog("Tried to set position NULL entity");
         return;
     }
+
+    //Set Position
     self->ubo.model[3][0] = self->pos.x;
     self->ubo.model[3][1] = self->pos.y;
     self->ubo.model[3][2] = self->pos.z;
+
+    //Set Rotation
+    gf3d_matrix_rotate(self->ubo.model, self->ubo.model, self->relative_rotation.x, AXIS_X);
+    gf3d_matrix_rotate(self->ubo.model, self->ubo.model, self->relative_rotation.y, AXIS_Y);
+    gf3d_matrix_rotate(self->ubo.model, self->ubo.model, self->relative_rotation.z, AXIS_Z);
     
+    memset(&self->relative_rotation, 0, sizeof(Vector3D));
+
+    //Set Scale
+    self->ubo.model[0][0] *= self->scale;
+    self->ubo.model[1][1] *= self->scale;
+    self->ubo.model[2][2] *= self->scale;
+
+    self->scale=1;
+
 }
 
 void entity_generic_draw(entity_t *self, Uint32 bufferFrame, VkCommandBuffer commandBuffer){
@@ -105,11 +142,11 @@ void entity_generic_draw(entity_t *self, Uint32 bufferFrame, VkCommandBuffer com
         slog("Tried to draw NULL entity");
         return;
     }
-    entity_set_draw_position(self);
+    entity_set_draw_ubo(self);
     gf3d_vgraphics_update_ubo(&self->ubo, bufferFrame);
-    commandBuffer = gf3d_command_rendering_begin(bufferFrame);
+    //commandBuffer = gf3d_command_rendering_begin(bufferFrame);
     gf3d_model_draw(self->model, bufferFrame, commandBuffer);
-    gf3d_command_rendering_end(commandBuffer);
+    //gf3d_command_rendering_end(commandBuffer);
     //gf3d_vgraphics_render_end(bufferFrame);
 }
 

@@ -25,8 +25,10 @@ enum Layer {
  */ 
 struct entity_s{
 
-    int                     think_next;        /**< Next time to update this entity */
-    int                     in_use;             /**< Check whether this entity spot is in use */
+    int                     think_next;         /**< Next time to update this entity */
+    int                     in_use;             /**< Check whether this entity spot is in use */\
+    
+    float                   scale;              /**< Scale for model */
 
     entity_t               *parent;             /**< The parent of this entity (E.g. Rocket->Player) */
 
@@ -38,7 +40,8 @@ struct entity_s{
     Vector3D                acceleration;       /**<  Acceleration for physics*/
 
     Vector3D                axis;               /**< Axis of rotation */
-    Vector3D                rotation;           /**< Rotational Velocity */
+    Vector3D                rotation;           /**< Rotation in degrees */
+    Vector3D                relative_rotation;  /**< Change in rotation in a frame */
 
     void (*Think)(entity_t *self);
     void (*Update)(entity_t *self);

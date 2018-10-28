@@ -42,7 +42,9 @@ void gf3d_vgraphics_copy_buffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDevice
 
 uint32_t gf3d_vgraphics_find_memory_type(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
-void gf3d_vgraphics_rotate_camera(float degrees);
+int gf3d_vgraphics_get_ubo_count();
+
+void gf3d_vgraphics_rotate_model(UniformBufferObject *ubo, float degrees);
 
 void gf3d_vgraphics_move_model(Vector3D pos);
 
