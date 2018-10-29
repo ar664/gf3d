@@ -48,6 +48,12 @@ void gf3d_vgraphics_rotate_model(UniformBufferObject *ubo, float degrees);
 
 void gf3d_vgraphics_move_model(Vector3D pos);
 
+VkBuffer gf3d_vgraphics_get_uniform_buffer_by_usage();
+
+int gf3d_vgraphics_uniform_buffer_get_index(VkBuffer buffer);
+
+void gf3d_vgraphics_uniform_buffer_remove_use(VkBuffer index);
+
 VkBuffer gf3d_vgraphics_get_uniform_buffer_by_index(Uint32 index);
 
 Pipeline *gf3d_vgraphics_get_graphics_pipeline();

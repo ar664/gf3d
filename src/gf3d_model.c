@@ -127,6 +127,9 @@ void gf3d_model_free(Model *model)
 {
     if ((!model)||(!model->_refcount))return;
     model->_refcount--;
+    if(model->_refcount == 0){
+        gf3d_vgraphics_uniform_buffer_remove_use(model->ubo);
+    }
 }
 
 void gf3d_model_delete(Model *model)
@@ -179,7 +182,7 @@ void gf3d_model_create_descriptor_sets(Model *model)
         slog("failed to allocate descriptor sets!");
         return;
     }
-    model->descriptorSetCount = gf3d_model.chain_length;
+    model->descriptorSetCount = 1; //gf3d_model.chain_length;
     for (i = 0; i < gf3d_model.chain_length; i++)
     {
         slog("updating descriptor sets");
@@ -187,9 +190,12 @@ void gf3d_model_create_descriptor_sets(Model *model)
         imageInfo.imageView = model->texture->textureImageView;
         imageInfo.sampler = model->texture->textureSampler;
     
-        bufferInfo.buffer = gf3d_vgraphics_get_uniform_buffer_by_index(i);
+        //bufferInfo.buffer = gf3d_vgraphics_get_uniform_buffer_by_index(i);
+        bufferInfo.buffer = gf3d_vgraphics_get_uniform_buffer_by_usage(); 
         bufferInfo.offset = 0;
         bufferInfo.range = sizeof(UniformBufferObject);        
+
+        model->ubo = bufferInfo.buffer;
         
         descriptorWrite[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
         descriptorWrite[0].dstSet = model->descriptorSets[i];

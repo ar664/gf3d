@@ -143,7 +143,7 @@ void entity_generic_draw(entity_t *self, Uint32 bufferFrame, VkCommandBuffer com
         return;
     }
     entity_set_draw_ubo(self);
-    gf3d_vgraphics_update_ubo(&self->ubo, bufferFrame);
+    gf3d_vgraphics_update_ubo(&self->ubo, gf3d_vgraphics_uniform_buffer_get_index(self->model->ubo));
     //commandBuffer = gf3d_command_rendering_begin(bufferFrame);
     gf3d_model_draw(self->model, bufferFrame, commandBuffer);
     //gf3d_command_rendering_end(commandBuffer);

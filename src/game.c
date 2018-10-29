@@ -38,6 +38,7 @@ int main(int argc,char *argv[])
     slog("gf3d main loop begin");
     
     entity1 = entity_load("cube");
+    entity1->Think = NULL;
     slog("vgraphics.ubo count = %u",gf3d_vgraphics_get_ubo_count());
     entity2 = entity_load("cube");
     slog("vgraphics.ubo count = %u",gf3d_vgraphics_get_ubo_count());
