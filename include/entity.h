@@ -87,6 +87,10 @@ void entity_system_draw(Uint32 bufferFrame, VkCommandBuffer commandBuffer);
  */
 //void entity_system_shutdown();
 
+void entity_generic_think(entity_t *self);
+
+void entity_rotate_self_x(entity_t *self);
+
 /**
  * @brief Destroys an entity on exit/during runtime
  * 

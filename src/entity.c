@@ -70,6 +70,23 @@ entity_t *entity_load(char *model){
     return ent;
 }
 
+void entity_rotate_self_x(entity_t *self){
+    int time;
+    if(!self){
+        slog("Tried to think NULL entity");
+        return;
+    }
+    time = 0; //THINKING EVERY FRAME *TODO CHANGE*
+    if(time > self->think_next){
+        return;
+    }
+
+    self->relative_rotation.x += 0.005;
+    vector3d_add(self->rotation, self->relative_rotation, self->rotation);  //Keeping track of overall rotation
+
+
+}
+
 void entity_generic_think(entity_t *self){
     int time;
     if(!self){
@@ -132,6 +149,7 @@ void entity_set_draw_ubo(entity_t *self){
     self->ubo.model[0][0] *= self->scale;
     self->ubo.model[1][1] *= self->scale;
     self->ubo.model[2][2] *= self->scale;
+    //self->ubo.model[3][3] *= self->scale;
 
     self->scale=1;
 

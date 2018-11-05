@@ -36,16 +36,20 @@ int main(int argc,char *argv[])
     
     // main game loop
     slog("gf3d main loop begin");
-    
+    slog("vgraphics.ubo count = %u",gf3d_vgraphics_get_ubo_count());
+
     entity1 = entity_load("cube");
     entity1->Think = NULL;
-    slog("vgraphics.ubo count = %u",gf3d_vgraphics_get_ubo_count());
-    entity2 = entity_load("cube");
-    slog("vgraphics.ubo count = %u",gf3d_vgraphics_get_ubo_count());
+
+    entity2 = entity_load("agumon");
     entity2->pos.x = 0;
     entity2->pos.y = -10;
-    //model = gf3d_model_load("agumon");
-    //model2 = gf3d_model_load("cube");
+
+    entity3 = entity_load("cube");
+    entity3->Think = &entity_rotate_self_x;
+    entity3->pos.x = 5;
+    entity3->pos.y = 5;
+
     while(!done)
     {
         SDL_PumpEvents();   // update SDL's internal event structures
