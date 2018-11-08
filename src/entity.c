@@ -48,7 +48,7 @@ entity_t *entity_load(char *model){
     entity_t *ent;
     ent = entity_new();
     ent->model = gf3d_model_load(model);
-    ent->Think = &entity_generic_think;
+    ent->Think = NULL;//&entity_generic_think;
     gf3d_matrix_identity(ent->ubo.model);
     gf3d_matrix_identity(ent->ubo.proj);
     gf3d_matrix_identity(ent->ubo.view);

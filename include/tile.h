@@ -10,15 +10,15 @@ typedef struct tile_s tile_t;
 
 struct tile_s {
     Uint8       buildable;      /**< Check whether a building can be built onto this tile */
-    Uint8       x;              /**< X position of tile */
-    Uint8       y;              /**< Y position of tile */
-    Uint8       width;          /**< Width of building taking tile */
-    Uint8       height;         /**< Height of building taking tile */
+    int         width;          /**< Width of building taking tile */
+    int         height;         /**< Height of building taking tile */
+    int         x;              /**< X position of tile */
+    int         y;              /**< Y position of tile */
     entity_t   *building;       /**< Building tied to this tile */
     entity_t   *ent;            /**< Entity tied to this tile */
     char       *name;           /**< Name of the tile */
 
-}
+};
 
 void tile_system_init();
 
@@ -36,7 +36,7 @@ void tile_load_map(char *mapName);
  * @param y         Y position of tile
  * @param tileName  The name of the tile
  */
-void tile_load(Uint8 x, Uint8 y, char *tileName);
+void tile_load(int x, int y, char *tileName);
 
 
 

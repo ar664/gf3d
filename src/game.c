@@ -10,6 +10,7 @@
 #include "gf3d_vector.h"
 #include "gf3d_texture.h"
 #include "entity.h"
+#include "tile.h"
 
 int main(int argc,char *argv[])
 {
@@ -18,6 +19,7 @@ int main(int argc,char *argv[])
     Uint32 bufferFrame = 0;
     VkCommandBuffer commandBuffer;
     entity_t *entity1, *entity2, *entity3;
+    tile_t *tile0;
     //Model *model;
     //Model *model2;
     
@@ -33,20 +35,24 @@ int main(int argc,char *argv[])
         0,                      //fullscreen
         1                       //validation
     );
-    
+    tile_system_init();
+
     // main game loop
     slog("gf3d main loop begin");
     slog("vgraphics.ubo count = %u",gf3d_vgraphics_get_ubo_count());
 
-    entity1 = entity_load("cube");
-    entity1->Think = NULL;
+    //entity1 = entity_load("cube");
+
+    tile_load(0, 0, "cube");
+    tile_load(1, 1, "cube");
 
     entity2 = entity_load("agumon");
+    entity2->Think = entity_generic_think;
     entity2->pos.x = 0;
     entity2->pos.y = -10;
 
     entity3 = entity_load("cube");
-    entity3->Think = &entity_rotate_self_x;
+    entity3->Think = entity_rotate_self_x;
     entity3->pos.x = 5;
     entity3->pos.y = 5;
 
