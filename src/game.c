@@ -1,6 +1,7 @@
 #include <SDL.h>            
 
 #include "simple_logger.h"
+#include "camera.h"
 #include "gf3d_vgraphics.h"
 #include "gf3d_pipeline.h"
 #include "gf3d_swapchain.h"
@@ -18,7 +19,7 @@ int main(int argc,char *argv[])
     const Uint8 * keys;
     Uint32 bufferFrame = 0;
     VkCommandBuffer commandBuffer;
-    entity_t *entity1, *entity2, *entity3;
+    entity_t *camEntity, *entity2, *entity3;
     tile_t *tile0;
     //Model *model;
     //Model *model2;
@@ -26,15 +27,17 @@ int main(int argc,char *argv[])
     init_logger("gf3d.log");    
     slog("gf3d begin");
     srand(time(NULL));
-    entity_system_init();
+    camera_init(1280,720);
+    
     gf3d_vgraphics_init(
         "gf3d",                 //program name
-        1200,                   //screen width
-        700,                    //screen height
+        1280,                   //screen width
+        720,                    //screen height
         vector4d(0.51,0.75,1,1),//background color
         0,                      //fullscreen
         1                       //validation
     );
+    entity_system_init();
     tile_system_init();
 
     // main game loop
@@ -46,13 +49,23 @@ int main(int argc,char *argv[])
     tile_load(0, 0, "cube");
     tile_load(1, 1, "cube");
 
+    camEntity = entity_load("");
+    if(!camEntity){
+        slog("Failed to load camEntity");
+    }
+    camEntity->Think = entity_think_camera;
+    camEntity->pos = vector3d(CAMERA_DEFUALT_X,
+                                CAMERA_DEFUALT_Y,
+                                CAMERA_DEFUALT_Z);
+    
+
     entity2 = entity_load("agumon");
-    entity2->Think = entity_generic_think;
+    //entity2->Think = entity_think_generic;
     entity2->pos.x = 0;
     entity2->pos.y = -10;
 
     entity3 = entity_load("cube");
-    entity3->Think = entity_rotate_self_x;
+    entity3->Think = entity_think_rotate_self_x;
     entity3->pos.x = 5;
     entity3->pos.y = 5;
 
@@ -61,6 +74,7 @@ int main(int argc,char *argv[])
         SDL_PumpEvents();   // update SDL's internal event structures
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         //update game things here
+        camera_update();
         entity_system_think((Uint8*)keys);
 
         //gf3d_vgraphics_move_model(vector3d(0,5,10));

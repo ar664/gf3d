@@ -40,7 +40,7 @@ struct entity_s{
     Vector3D                acceleration;       /**<  Acceleration for physics*/
 
     Vector3D                axis;               /**< Axis of rotation */
-    Vector3D                rotation;           /**< Rotation in degrees */
+    Vector3D                rotation;           /**< Rotation in degrees, used to keep track of changes in relative_rotation */
     Vector3D                relative_rotation;  /**< Change in rotation in a frame */
 
     void (*Think)(entity_t *self);
@@ -87,9 +87,11 @@ void entity_system_draw(Uint32 bufferFrame, VkCommandBuffer commandBuffer);
  */
 //void entity_system_shutdown();
 
-void entity_generic_think(entity_t *self);
+void entity_think_generic(entity_t *self);
 
-void entity_rotate_self_x(entity_t *self);
+void entity_think_camera(entity_t *self);
+
+void entity_think_rotate_self_x(entity_t *self);
 
 /**
  * @brief Destroys an entity on exit/during runtime

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "entity.h"
+#include "camera.h"
 #include "simple_logger.h"
 #include "SDL.h"
 #include "gf3d_vgraphics.h"
@@ -50,27 +51,15 @@ entity_t *entity_load(char *model){
     ent->model = gf3d_model_load(model);
     ent->Think = NULL;//&entity_generic_think;
     gf3d_matrix_identity(ent->ubo.model);
-    gf3d_matrix_identity(ent->ubo.proj);
-    gf3d_matrix_identity(ent->ubo.view);
-    gf3d_matrix_view(
-        ent->ubo.view,
-        vector3d(2,20,2),
-        vector3d(0,0,0),
-        vector3d(0,0,1)
-    );
-    gf3d_matrix_perspective(
-        ent->ubo.proj,
-        45 * GF3D_DEGTORAD,
-        1200/(float)700,
-        0.1f,
-        100
-    );
-    ent->ubo.proj[1][1] *= -1;
+    
+    camera_get_perspective(ent->ubo.proj);
+    camera_get_view(ent->ubo.view);
+
     ent->scale = 1;
     return ent;
 }
 
-void entity_rotate_self_x(entity_t *self){
+void entity_think_rotate_self_x(entity_t *self){
     int time;
     if(!self){
         slog("Tried to think NULL entity");
@@ -87,7 +76,7 @@ void entity_rotate_self_x(entity_t *self){
 
 }
 
-void entity_generic_think(entity_t *self){
+void entity_think_generic(entity_t *self){
     int time;
     if(!self){
         slog("Tried to think NULL entity");
@@ -127,6 +116,26 @@ void entity_generic_think(entity_t *self){
     //self->pos.x += 0.005;
 }
 
+void entity_think_camera(entity_t *self){
+    if(!self){
+        slog("Tried to think NULL entity");
+        return;
+    }
+
+    if(entity_keys[SDL_SCANCODE_W]){
+        self->pos.y += 0.1;
+    } else if(entity_keys[SDL_SCANCODE_S]){
+        self->pos.y -= 0.1;
+    } else if(entity_keys[SDL_SCANCODE_A]){
+        self->pos.x += 0.1;
+    } else if(entity_keys[SDL_SCANCODE_D]){
+        self->pos.x -= 0.1;
+    }
+
+    camera_set_pos(self->pos);
+    
+}
+
 void entity_set_draw_ubo(entity_t *self){
     if(!self){
         slog("Tried to set position NULL entity");
@@ -153,11 +162,18 @@ void entity_set_draw_ubo(entity_t *self){
 
     self->scale=1;
 
+    camera_get_perspective(self->ubo.proj);
+    camera_get_view(self->ubo.view);
+
 }
 
 void entity_generic_draw(entity_t *self, Uint32 bufferFrame, VkCommandBuffer commandBuffer){
     if(!self){
         slog("Tried to draw NULL entity");
+        return;
+    }
+    if(!self->model){
+        //Assuming not error, invisible entities
         return;
     }
     entity_set_draw_ubo(self);
