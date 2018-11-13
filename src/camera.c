@@ -13,13 +13,14 @@ void camera_init(int width, int height)
     Camera.pos = vector3d(CAMERA_DEFUALT_X,
                           CAMERA_DEFUALT_Y,
                           CAMERA_DEFUALT_Z);
+    Camera.target = vector3d(0,0,0);
 
     gf3d_matrix_identity(Camera.perspective);
     gf3d_matrix_identity(Camera.view);
 
     gf3d_matrix_view(Camera.view, 
                      Camera.pos, 
-                     vector3d(0,0,0), 
+                     Camera.target, 
                      vector3d(0,0,1));
     
     gf3d_matrix_perspective(Camera.perspective, 
@@ -34,7 +35,7 @@ void camera_init(int width, int height)
 void camera_update(){
     gf3d_matrix_view(Camera.view, 
                      Camera.pos, 
-                     vector3d(0,0,0), 
+                     Camera.target, 
                      vector3d(0,0,1));
     
     gf3d_matrix_perspective(Camera.perspective, 
@@ -62,4 +63,8 @@ void camera_get_perspective(Matrix4 out){
 
 void camera_set_pos(Vector3D pos){
     Camera.pos = pos;
+}
+
+void camera_set_target(Vector3D targ){
+    Camera.target = targ;
 }

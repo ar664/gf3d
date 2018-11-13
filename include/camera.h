@@ -8,6 +8,7 @@ typedef struct camera_s camera_t;
 
 struct camera_s{
     Vector3D    pos;
+    Vector3D    target;
     float       fov;
     float       near;
     float       far;
@@ -51,6 +52,18 @@ void camera_get_view(Matrix4 out);
  */
 void camera_get_perspective(Matrix4 out);
 
+/**
+ * @brief Set the camera position
+ * 
+ * @param pos The position in (x,y,z) 
+ */
 void camera_set_pos(Vector3D pos);
+
+/**
+ * @brief Set the target that the camera is looking at
+ * 
+ * @param targ The target in (x,y,z) 
+ */
+void camera_set_target(Vector3D targ);
 
 #endif

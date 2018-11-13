@@ -117,6 +117,7 @@ void entity_think_generic(entity_t *self){
 }
 
 void entity_think_camera(entity_t *self){
+    Vector3D target;
     if(!self){
         slog("Tried to think NULL entity");
         return;
@@ -132,7 +133,14 @@ void entity_think_camera(entity_t *self){
         self->pos.x -= 0.1;
     }
 
+    target = vector3d(self->pos.x - CAMERA_DEFUALT_X,
+                      self->pos.y - CAMERA_DEFUALT_Y,
+                      self->pos.z - CAMERA_DEFUALT_Z);
     camera_set_pos(self->pos);
+    camera_set_target(target);
+
+    
+
     
 }
 
