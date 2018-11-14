@@ -425,7 +425,7 @@ void gf3d_vgraphics_close()
     }
     if (gf3d_vgraphics.vk_instance)
     {
-        vkDestroyInstance(gf3d_vgraphics.vk_instance, NULL);
+        //vkDestroyInstance(gf3d_vgraphics.vk_instance, NULL);
     }
     if (gf3d_vgraphics.main_window)
     {

@@ -61,6 +61,12 @@ void camera_get_perspective(Matrix4 out){
     memcpy(out, Camera.perspective, sizeof(Matrix4));
 }
 
+void camera_set_perspective(Matrix4 in){
+    if(!in) return;
+
+    memcpy(Camera.perspective, in, sizeof(Matrix4));
+}
+
 void camera_set_pos(Vector3D pos){
     Camera.pos = pos;
 }

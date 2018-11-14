@@ -1,3 +1,4 @@
+#include "simple_logger.h"
 #include "simple_json.h"
 #include "tile.h"
 
@@ -68,6 +69,7 @@ void tile_load(int x, int y, char *tileName)
 
 void tile_system_shutdown(){
     int i;
+    slog("tile system shutdown");
     for(i = 0; i < TILE_MAX_X*TILE_MAX_Y; i++)
     {
         if(tile_list[i].building){
@@ -76,5 +78,8 @@ void tile_system_shutdown(){
         if(tile_list[i].ent){
             tile_list[i].ent->Destroy(tile_list[i].ent);
         }
+
+        memset(&tile_list[i], 0, sizeof(tile_t));
+        
     }
 }

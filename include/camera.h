@@ -48,9 +48,16 @@ void camera_get_view(Matrix4 out);
 /**
  * @brief Get the current perspective matrix of the camera.
  * 
- * @return Matrix4* A pointer to the perspective of the camera
+ * @return Matrix4 A pointer to the perspective of the camera
  */
 void camera_get_perspective(Matrix4 out);
+
+/**
+ * @brief Set the perspective matrix of the camera.
+ * 
+ * @param in A pointer to a perspective 
+ */
+void camera_set_perspective(Matrix4 in);
 
 /**
  * @brief Set the camera position

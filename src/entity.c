@@ -118,6 +118,9 @@ void entity_think_generic(entity_t *self){
 
 void entity_think_camera(entity_t *self){
     Vector3D target;
+    Matrix4 perspective;
+    int x,y;
+
     if(!self){
         slog("Tried to think NULL entity");
         return;
@@ -133,13 +136,25 @@ void entity_think_camera(entity_t *self){
         self->pos.x -= 0.1;
     }
 
+    SDL_GetRelativeMouseState(&x, &y);
+    self->relative_rotation.x = y / (float) 150;
+    self->relative_rotation.y = x / (float) 150;
+
+    vector3d_add(self->rotation, self->relative_rotation, self->rotation);
+
     target = vector3d(self->pos.x - CAMERA_DEFUALT_X,
                       self->pos.y - CAMERA_DEFUALT_Y,
                       self->pos.z - CAMERA_DEFUALT_Z);
     camera_set_pos(self->pos);
     camera_set_target(target);
 
+    camera_get_perspective(perspective);
+
+    gf3d_matrix_rotate(perspective, perspective, -self->rotation.x, AXIS_X);
+    gf3d_matrix_rotate(perspective, perspective, -self->rotation.y, AXIS_Y);
+    //gf3d_matrix_rotate(perspective, perspective, self->rotation.z, AXIS_Z);
     
+    camera_set_perspective(perspective);
 
     
 }
@@ -226,6 +241,7 @@ void entity_system_draw(Uint32 bufferFrame, VkCommandBuffer commandBuffer){
 
 void entity_system_shutdown(){
     int i;
+    slog("cleaning up entities");
     for(i = 0; i < ENTITY_MAX; i++){
         if(entity_list[i].Destroy){
             entity_list[i].Destroy(&entity_list[i]);
