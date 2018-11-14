@@ -74,3 +74,10 @@ void camera_set_pos(Vector3D pos){
 void camera_set_target(Vector3D targ){
     Camera.target = targ;
 }
+
+int camera_get_width() {
+    return Camera.width;
+}
+int camera_get_height(){
+    return Camera.height;
+}

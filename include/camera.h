@@ -26,6 +26,8 @@ struct camera_s{
 #define CAMERA_DEFUALT_NEAR 0.1
 #define CAMERA_DEFUALT_FAR  100
 
+#define CAMERA_MAX_ROTATION .5
+
 /**
  * @brief Initialize the camera variables to their default values
  * 
@@ -51,6 +53,9 @@ void camera_get_view(Matrix4 out);
  * @return Matrix4 A pointer to the perspective of the camera
  */
 void camera_get_perspective(Matrix4 out);
+
+int camera_get_width();
+int camera_get_height();
 
 /**
  * @brief Set the perspective matrix of the camera.

@@ -136,11 +136,30 @@ void entity_think_camera(entity_t *self){
         self->pos.x -= 0.1;
     }
 
-    SDL_GetRelativeMouseState(&x, &y);
-    self->relative_rotation.x = y / (float) 150;
-    self->relative_rotation.y = x / (float) 150;
+    SDL_GetMouseState(&x, &y);
+    self->relative_rotation.x = ( camera_get_height() / (float) 2 - y ) / (float) 150;
+    self->relative_rotation.y = ( camera_get_width() / (float) 2 - x ) / (float) 150;
 
-    vector3d_add(self->rotation, self->relative_rotation, self->rotation);
+    if(self->relative_rotation.x > CAMERA_MAX_ROTATION)
+    {
+        self->relative_rotation.x = CAMERA_MAX_ROTATION;
+    } 
+    else if (self->relative_rotation.x < -CAMERA_MAX_ROTATION)
+    {
+        self->relative_rotation.x = -CAMERA_MAX_ROTATION;
+    }
+
+    if(self->relative_rotation.y > CAMERA_MAX_ROTATION)
+    {
+        self->relative_rotation.y = CAMERA_MAX_ROTATION;
+    }
+    else if(self->relative_rotation.y < -CAMERA_MAX_ROTATION)
+    {
+        self->relative_rotation.y = -CAMERA_MAX_ROTATION;
+    }
+
+    //vector3d_add(self->rotation, self->relative_rotation, self->rotation);
+    vector3d_copy(self->rotation, self->relative_rotation);
 
     target = vector3d(self->pos.x - CAMERA_DEFUALT_X,
                       self->pos.y - CAMERA_DEFUALT_Y,
