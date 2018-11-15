@@ -10,6 +10,8 @@ typedef struct
     Vector3D vertex;
     Vector3D normal;
     Vector2D texel;
+    float    boneWeights[2];
+    Uint32   boneIDs[2];
 }Vertex;
 
 typedef struct

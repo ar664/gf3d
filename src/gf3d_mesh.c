@@ -7,7 +7,7 @@
 
 #include <stddef.h>
 
-#define ATTRIBUTE_COUNT 3
+#define ATTRIBUTE_COUNT 5
 
 
 typedef struct
@@ -53,6 +53,16 @@ void gf3d_mesh_init(Uint32 mesh_max)
     gf3d_mesh.attributeDescriptions[2].location = 2;
     gf3d_mesh.attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
     gf3d_mesh.attributeDescriptions[2].offset = offsetof(Vertex, texel);
+
+    gf3d_mesh.attributeDescriptions[2].binding = 0;
+    gf3d_mesh.attributeDescriptions[2].location = 3;
+    gf3d_mesh.attributeDescriptions[2].format = VK_FORMAT_R32_SFLOAT;
+    gf3d_mesh.attributeDescriptions[2].offset = offsetof(Vertex, boneWeights);
+
+    gf3d_mesh.attributeDescriptions[2].binding = 0;
+    gf3d_mesh.attributeDescriptions[2].location = 4;
+    gf3d_mesh.attributeDescriptions[2].format = VK_FORMAT_R32_SFLOAT;
+    gf3d_mesh.attributeDescriptions[2].offset = offsetof(Vertex, boneIDs);
 
     gf3d_mesh.mesh_list = gf3d_allocate_array(sizeof(Mesh),mesh_max);
     slog("mesh system initialized");

@@ -3,6 +3,9 @@
 
 #include "gf3d_vector.h"
 
+#define BONES_MAX 64
+#define BONES_PER_VERTEX_MAX 2
+
 typedef float Matrix4[4][4];
 
 typedef struct
@@ -10,6 +13,7 @@ typedef struct
     Matrix4 model;
     Matrix4 view;
     Matrix4 proj;
+    Matrix4 bones[BONES_MAX];
 }UniformBufferObject;
 
 /**

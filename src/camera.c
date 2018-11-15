@@ -78,6 +78,7 @@ void camera_set_target(Vector3D targ){
 int camera_get_width() {
     return Camera.width;
 }
+
 int camera_get_height(){
     return Camera.height;
 }
