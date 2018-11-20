@@ -1,5 +1,5 @@
-#ifndef __PHYSICS_H
-#define __PHYSICS_H
+#ifndef __SHAPE_H
+#define __SHAPE_H
 
 #include "entity.h"
 
@@ -43,12 +43,6 @@ struct shape_s{
 };
 
 /**
- * @brief Starts the physics system for the entities
- * 
- */
-void physics_system_init();
-
-/**
  * @brief           Make a physics shape of a cube
  * 
  * @param x         X position
@@ -59,7 +53,7 @@ void physics_system_init();
  * @param depth     Depth of cube
  * @return shape_t  The shape with all the values set
  */
-shape_t physics_shape_cube(float x, float y, float z, float height, float width, float depth);
+shape_t shape_cube(float x, float y, float z, float height, float width, float depth);
 
 /**
  * @brief       Make a physics shape of a sphere
@@ -70,7 +64,7 @@ shape_t physics_shape_cube(float x, float y, float z, float height, float width,
  * @param radius    The radius of the sphere
  * @return shape_t  The shape with all the values set 
  */
-shape_t physics_shape_sphere(float x, float y, float z, float radius);
+shape_t shape_sphere(float x, float y, float z, float radius);
 
 /**
  * @brief       Make a physics shape of an edge
@@ -83,6 +77,42 @@ shape_t physics_shape_sphere(float x, float y, float z, float radius);
  * @param z2 
  * @return shape_t The shape with all values set 
  */
-shape_t physics_shape_edge(float x1, float y1, float z1, float x2, float y2, float z2);
+shape_t shape_edge(float x1, float y1, float z1, float x2, float y2, float z2);
+
+/**
+ * @brief Check if two spheres overlap
+ * 
+ * @param a     Sphere a
+ * @param b     Sphere b
+ * @return Uint8 True or False
+ */
+Uint8 shape_sphere_overlap(Sphere a, Sphere b);
+
+/**
+ * @brief Check if a sphere and a cube overlap
+ * 
+ * @param a     Sphera a
+ * @param b     Cube b
+ * @return Uint8 True or False
+ */
+Uint8 shape_sphere_cube_overlap(Sphere a, Cube b);
+
+/**
+ * @brief Check if two cubes overlap
+ * 
+ * @param a     Cube a
+ * @param b     Cube b
+ * @return Uint8 
+ */
+Uint8 shape_cube_overlap(Cube a, Cube b);
+
+/**
+ * @brief Check if a 3D point is inside a sphere.
+ * 
+ * @param p 
+ * @param c 
+ * @return Uint8 
+ */
+Uint8 shape_point_in_sphere(Vector3D p,Circle c);
 
 #endif
