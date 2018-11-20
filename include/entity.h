@@ -4,6 +4,7 @@
 #include "gf3d_model.h"
 #include "gf3d_matrix.h"
 #include "gf3d_vector.h"
+#include "physics.h"
 
 #define ENTITY_MAX 1000
 
