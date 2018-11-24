@@ -68,13 +68,14 @@ int main(int argc,char *argv[])
 
     entity3 = entity_load("cube");
     entity3->Think = entity_think_rotate_self_x;
+    entity3->Touch = NULL;
     entity3->pos.x = 5;
     entity3->pos.y = 5;
     entity3->pos.z = 0;
     physics_add_body(entity3);
 
     entity4 = entity_load("cube");
-    entity4->velocity.y = 0.01;
+    entity4->velocity.y = 0.0005;
     entity4->pos.x = 5;
     entity4->pos.y = -5;
     entity4->pos.z = 0;

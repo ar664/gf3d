@@ -48,7 +48,7 @@ void physics_system_update(){
 CHANGE:
     bodyCheck = bodyCount;
     for(i = 0; i < bodyCount; i++){
-        for(j = bodyCount; j > 0; j--){
+        for(j = bodyCount-1; j > 0; j--){
             if(i == j)
             {
                 continue;
