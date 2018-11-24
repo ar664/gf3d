@@ -12,6 +12,7 @@
 #include "gf3d_texture.h"
 #include "entity.h"
 #include "tile.h"
+#include "physics.h"
 
 int main(int argc,char *argv[])
 {
@@ -19,7 +20,7 @@ int main(int argc,char *argv[])
     const Uint8 * keys;
     Uint32 bufferFrame = 0;
     VkCommandBuffer commandBuffer;
-    entity_t *camEntity, *entity2, *entity3;
+    entity_t *camEntity, *entity2, *entity3, *entity4;
     tile_t *tile0;
     //Model *model;
     //Model *model2;
@@ -39,6 +40,7 @@ int main(int argc,char *argv[])
     );
     entity_system_init();
     tile_system_init();
+    physics_system_init();
 
     // main game loop
     slog("gf3d main loop begin");
@@ -59,15 +61,25 @@ int main(int argc,char *argv[])
                                 CAMERA_DEFUALT_Z);
     
 
-    entity2 = entity_load("agumon");
+    //entity2 = entity_load("agumon");
     //entity2->Think = entity_think_generic;
-    entity2->pos.x = 0;
-    entity2->pos.y = -10;
+    //entity2->pos.x = 0;
+    //entity2->pos.y = -10;
 
     entity3 = entity_load("cube");
     entity3->Think = entity_think_rotate_self_x;
     entity3->pos.x = 5;
     entity3->pos.y = 5;
+    entity3->pos.z = 0;
+    physics_add_body(entity3);
+
+    entity4 = entity_load("cube");
+    entity4->velocity.y = 0.01;
+    entity4->pos.x = 5;
+    entity4->pos.y = -5;
+    entity4->pos.z = 0;
+    entity4->Touch = entity_touch_destroy_other;
+    physics_add_body(entity4);
 
     while(!done)
     {
@@ -75,19 +87,11 @@ int main(int argc,char *argv[])
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         //update game things here
         camera_update();
+        physics_system_update();
         entity_system_think((Uint8*)keys);
 
         //gf3d_vgraphics_move_model(vector3d(0,5,10));
         //entity2->pos.x += 0.005;
-        if(entity2->pos.x > 1){
-            entity2->Destroy(entity2);
-            if(rand()%2){
-                entity2 = entity_load("agumon");
-            } else {
-                entity2 = entity_load("cube");
-            }
-            
-        }
         //gf3d_vgraphics_rotate_camera(0.001);
     
         // configure render command for graphics command pool

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "entity.h"
+#include "physics.h"
 #include "camera.h"
 #include "simple_logger.h"
 #include "SDL.h"
@@ -49,6 +50,7 @@ entity_t *entity_load(char *model){
     entity_t *ent;
     ent = entity_new();
     ent->model = gf3d_model_load(model);
+    ent->shape = shape_load(model);
     ent->Think = NULL;//&entity_generic_think;
     gf3d_matrix_identity(ent->ubo.model);
     
@@ -58,6 +60,8 @@ entity_t *entity_load(char *model){
     ent->scale = 1;
     return ent;
 }
+
+//THINK FUNCTIONS START 
 
 void entity_think_rotate_self_x(entity_t *self){
     int time;
@@ -178,6 +182,22 @@ void entity_think_camera(entity_t *self){
     
 }
 
+//THINK FUNCTIONS END
+
+//TOUCH FUNCTIONS START
+
+void entity_touch_destroy_other(entity_t *self, entity_t* other){
+
+    if(other){
+        if(other->Destroy){
+            other->Destroy(other);
+        }
+    }
+    slog("Destroyed other");
+}
+
+//TOUCH FUNCTIONS END
+
 void entity_set_draw_ubo(entity_t *self){
     if(!self){
         slog("Tried to set position NULL entity");
@@ -234,6 +254,9 @@ void entity_generic_destroy(entity_t *self){
     self->in_use = 0;
     if(self->model){
         gf3d_model_free(self->model);
+    }
+    if(self->in_sim){
+        physics_remove_body(self);
     }
     memset(self, 0, sizeof(entity_t));
     

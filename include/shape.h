@@ -1,7 +1,8 @@
 #ifndef __SHAPE_H
 #define __SHAPE_H
 
-#include "entity.h"
+#include "gf3d_matrix.h"
+#include "gf3d_types.h"
 
 typedef struct shape_s  shape_t;
 typedef struct body_s   body_t;
@@ -20,8 +21,8 @@ typedef struct
 typedef struct
 {
     float x,y,z;
-    float width,
-    float height
+    float width;
+    float height;
     float depth;
 }Cube;
 
@@ -31,6 +32,10 @@ typedef enum
     ST_SPHERE,
     ST_EDGE
 }ShapeTypes;
+
+#define SHAPE_STR_CUBE   "CUBE"
+#define SHAPE_STR_SPHERE "SPHERE"
+#define SHAPE_STR_EDGE   "EDGE"
 
 struct shape_s{
     ShapeTypes type;
@@ -102,7 +107,7 @@ Uint8 shape_sphere_cube_overlap(Sphere a, Cube b);
  * 
  * @param a     Cube a
  * @param b     Cube b
- * @return Uint8 
+ * @return Uint8 True of False
  */
 Uint8 shape_cube_overlap(Cube a, Cube b);
 
@@ -111,8 +116,28 @@ Uint8 shape_cube_overlap(Cube a, Cube b);
  * 
  * @param p 
  * @param c 
- * @return Uint8 
+ * @return Uint8 True of False
  */
-Uint8 shape_point_in_sphere(Vector3D p,Circle c);
+Uint8 shape_point_in_sphere(Vector3D p,Sphere c);
+
+/**
+ * @brief Check whether two shapes are overlaped
+ * 
+ * @param shape a
+ * @param shape b
+ * @return Uint8 True or False
+ */
+Uint8 shape_shape_overlap(shape_t a, shape_t b);
+
+/**
+ * @brief Load a shape from a json fil=e
+ * 
+ * @param filename  The file name of the model Ex: cube.json would just be "cube"
+ *
+ * @return shape_t  The shape of the file 
+ * 
+ * @note    Shapes are in [x,y,z,...] order from json file
+ */
+shape_t shape_load(char *filename);
 
 #endif

@@ -4,7 +4,7 @@
 #include "gf3d_model.h"
 #include "gf3d_matrix.h"
 #include "gf3d_vector.h"
-#include "physics.h"
+#include "shape.h"
 
 #define ENTITY_MAX 1000
 
@@ -39,6 +39,9 @@ struct entity_s{
     Vector3D                pos;                /**< Position for physics */
     Vector3D                velocity;           /**< Velocity for physics */
     Vector3D                acceleration;       /**<  Acceleration for physics*/
+
+    shape_t                 shape;              /**< The shape (sphere, cube, edge) of the entity */
+    int                     in_sim;             /**< If this entity is in the physics simulation */
 
     Vector3D                axis;               /**< Axis of rotation */
     Vector3D                rotation;           /**< Rotation in degrees, used to keep track of changes in relative_rotation */
@@ -93,6 +96,8 @@ void entity_think_generic(entity_t *self);
 void entity_think_camera(entity_t *self);
 
 void entity_think_rotate_self_x(entity_t *self);
+
+void entity_touch_destroy_other(entity_t *self, entity_t* other);
 
 /**
  * @brief Destroys an entity on exit/during runtime
