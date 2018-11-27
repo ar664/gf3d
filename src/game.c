@@ -1,4 +1,5 @@
 #include <SDL.h>            
+#include <time.h>
 
 #include "simple_logger.h"
 #include "camera.h"
@@ -14,6 +15,7 @@
 #include "tile.h"
 #include "physics.h"
 
+
 int main(int argc,char *argv[])
 {
     int done = 0;
@@ -21,7 +23,6 @@ int main(int argc,char *argv[])
     Uint32 bufferFrame = 0;
     VkCommandBuffer commandBuffer;
     entity_t *camEntity, *entity2, *entity3, *entity4;
-    tile_t *tile0;
     //Model *model;
     //Model *model2;
     
@@ -39,7 +40,7 @@ int main(int argc,char *argv[])
         1                       //validation
     );
     entity_system_init();
-    tile_system_init();
+    //tile_system_init();
     physics_system_init();
 
     // main game loop
@@ -48,8 +49,8 @@ int main(int argc,char *argv[])
 
     //entity1 = entity_load("cube");
 
-    tile_load(0, 0, "cube");
-    tile_load(1, 1, "cube");
+    //tile_load(0, 0, "cube");
+    //tile_load(0, 0, "tile");
 
     camEntity = entity_load("");
     if(!camEntity){
@@ -61,10 +62,11 @@ int main(int argc,char *argv[])
                                 CAMERA_DEFUALT_Z);
     
 
-    //entity2 = entity_load("agumon");
-    //entity2->Think = entity_think_generic;
-    //entity2->pos.x = 0;
-    //entity2->pos.y = -10;
+    entity2 = entity_load("cube");
+    entity2->pos = vector3d(0,0,-5);
+    entity2->relative_rotation.x = 90;
+    entity_scale_entity(entity2, 50, 50, 1);
+
 
     entity3 = entity_load("cube");
     entity3->Think = entity_think_rotate_self_x;
@@ -75,7 +77,7 @@ int main(int argc,char *argv[])
     physics_add_body(entity3);
 
     entity4 = entity_load("cube");
-    entity4->velocity.y = 0.0005;
+    entity4->velocity.y = 0.001;
     entity4->pos.x = 5;
     entity4->pos.y = -5;
     entity4->pos.z = 0;

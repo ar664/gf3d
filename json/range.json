@@ -1,0 +1,7 @@
+{
+    "name" : "luitenant",
+    "type" : "range",
+    "attack" : 75,
+    "defense" : 25,
+    "health" : 100
+}

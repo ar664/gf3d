@@ -1,0 +1,7 @@
+{
+    "name" : "admiral",
+    "type" : "flying",
+    "attack" : 50,
+    "defense" : 25,
+    "health" : 50
+}

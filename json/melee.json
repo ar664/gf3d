@@ -1,0 +1,7 @@
+{
+    "name" : "commander",
+    "type" : "melee",
+    "attack" : 50,
+    "defense" : 50,
+    "health" : 100
+}

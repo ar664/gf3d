@@ -57,7 +57,8 @@ entity_t *entity_load(char *model){
     camera_get_perspective(ent->ubo.proj);
     camera_get_view(ent->ubo.view);
 
-    ent->scale = 1;
+    vector3d_set(ent->scale, 1, 1, 1);
+
     return ent;
 }
 
@@ -111,11 +112,11 @@ void entity_think_generic(entity_t *self){
 
     vector3d_add(self->rotation, self->relative_rotation, self->rotation);  //Keeping track of overall rotation
 
-    if(entity_keys[SDL_SCANCODE_E]){
+    /* if(entity_keys[SDL_SCANCODE_E]){
         self->scale += 0.005;
     } else if (entity_keys[SDL_SCANCODE_Q]){
         self->scale -= 0.005;
-    }
+    } */
 
     //self->pos.x += 0.005;
 }
@@ -187,7 +188,9 @@ void entity_think_camera(entity_t *self){
 //TOUCH FUNCTIONS START
 
 void entity_touch_destroy_other(entity_t *self, entity_t* other){
-
+    if(!self  || !other){
+        return;
+    }
     if(other){
         if(other->Destroy){
             other->Destroy(other);
@@ -196,7 +199,34 @@ void entity_touch_destroy_other(entity_t *self, entity_t* other){
     slog("Destroyed other");
 }
 
+void entity_touch_stop_moving(entity_t *self, entity_t* other){
+    if(!self || !other){
+        return;
+    }
+
+    vector3d_set(self->velocity, 0,0,0);
+    
+}
+
 //TOUCH FUNCTIONS END
+
+void entity_scale_entity(entity_t *ent, float x, float y, float z){
+    int i;
+    float *shape, *scale;
+    if(!ent){
+        return;
+    }
+    ent->scale.x = x;
+    ent->scale.y = y;
+    ent->scale.z = z;
+
+    scale = (float*) &ent->scale;
+    shape = (float*) &ent->shape.shape;
+
+    for(i = 0; i < 3; i++){
+        shape[i] = shape[i]*scale[i]; 
+    }
+}
 
 void entity_set_draw_ubo(entity_t *self){
     if(!self){
@@ -217,12 +247,11 @@ void entity_set_draw_ubo(entity_t *self){
     memset(&self->relative_rotation, 0, sizeof(Vector3D));
 
     //Set Scale
-    self->ubo.model[0][0] *= self->scale;
-    self->ubo.model[1][1] *= self->scale;
-    self->ubo.model[2][2] *= self->scale;
-    //self->ubo.model[3][3] *= self->scale;
+    self->ubo.model[0][0] *= self->scale.x;
+    self->ubo.model[1][1] *= self->scale.y;
+    self->ubo.model[2][2] *= self->scale.z;
 
-    self->scale=1;
+    vector3d_set(self->scale, 1, 1, 1);
 
     camera_get_perspective(self->ubo.proj);
     camera_get_view(self->ubo.view);
@@ -236,6 +265,9 @@ void entity_generic_draw(entity_t *self, Uint32 bufferFrame, VkCommandBuffer com
     }
     if(!self->model){
         //Assuming not error, invisible entities
+        return;
+    }
+    if(!self->model->texture){
         return;
     }
     entity_set_draw_ubo(self);

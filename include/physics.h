@@ -6,8 +6,14 @@
 #define PHYSICS_BODY_MAX 1000
 #define PHYSICS_MAX_VEL 10
 #define PHYSICS_MAX_ACCEL 5
+#define PHYSICS_MAX_RAYCAST 1000
 #define PHYSICS_FRICTION 0.1
 
+typedef struct{
+    Vector3D pos;
+    Vector3D direction;
+
+}Ray;
 
 typedef struct body_s body_t;
 
@@ -40,5 +46,22 @@ void physics_add_body(entity_t *ent);
  * @param ent 
  */
 void physics_remove_body(entity_t *ent);
+
+/**
+ * @brief Does a raycast to find an entity that intersects that ray
+ * 
+ * @param ray   position & direction
+ * @return entity_t* entity that is in the physics simulation
+ */
+entity_t *physics_raycast(Ray ray);
+
+/**
+ * @brief Does a ray cast with a point on screen
+ * 
+ * @param point     Point on screen (Usually where the mouse is)
+ * @return entity_t* entity that is in the physics simulation
+ */
+entity_t *physics_raycast_point_on_screen(Vector2D point);
+
 
 #endif

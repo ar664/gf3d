@@ -27,9 +27,10 @@ enum Layer {
 struct entity_s{
 
     int                     think_next;         /**< Next time to update this entity */
-    int                     in_use;             /**< Check whether this entity spot is in use */\
+    int                     in_use;             /**< Check whether this entity spot is in use */
+    char                   *name;               /**< The name of the entity */
     
-    float                   scale;              /**< Scale for model */
+    Vector3D                scale;              /**< Scale for model in x,y,z */
 
     entity_t               *parent;             /**< The parent of this entity (E.g. Rocket->Player) */
 
@@ -95,9 +96,34 @@ void entity_think_generic(entity_t *self);
 
 void entity_think_camera(entity_t *self);
 
+
 void entity_think_rotate_self_x(entity_t *self);
 
+/**
+ * @brief When this entity touches another entity, destroy the other
+ * 
+ * @param self  Entity that has touched
+ * @param other Entity that has been touched
+ */
 void entity_touch_destroy_other(entity_t *self, entity_t* other);
+
+/**
+ * @brief When this entity touches another entity, this entity stops moving
+ * 
+ * @param self 
+ * @param other 
+ */
+void entity_touch_stop_moving(entity_t *self, entity_t* other);
+
+/**
+ * @brief Scale an entity via model and shape
+ * 
+ * @param ent   The entity to scale
+ * @param x     X Scale
+ * @param y     Y Scale
+ * @param z     Z Scale
+ */
+void entity_scale_entity(entity_t *ent, float x, float y, float z);
 
 /**
  * @brief Destroys an entity on exit/during runtime

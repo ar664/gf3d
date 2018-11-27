@@ -161,7 +161,6 @@ shape_t shape_load(char *filename){
 
     if(!json)
     {
-        sj_free(json);
         return shape;
     }
 

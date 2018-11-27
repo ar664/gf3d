@@ -185,12 +185,16 @@ void gf3d_model_create_descriptor_sets(Model *model)
     }
     model->descriptorSetCount = gf3d_model.chain_length;
     TempBuffer = gf3d_vgraphics_get_uniform_buffer_by_usage();
+
     for (i = 0; i < gf3d_model.chain_length; i++)
     {
         slog("updating descriptor sets");
         imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        imageInfo.imageView = model->texture->textureImageView;
-        imageInfo.sampler = model->texture->textureSampler;
+        if(model->texture){
+            imageInfo.imageView = model->texture->textureImageView;
+            imageInfo.sampler = model->texture->textureSampler;
+        }
+        
     
         //bufferInfo.buffer = gf3d_vgraphics_get_uniform_buffer_by_index(i);
         bufferInfo.buffer = TempBuffer;//gf3d_vgraphics_get_uniform_buffer_by_usage(); 

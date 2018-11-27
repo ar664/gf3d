@@ -5,7 +5,6 @@
 #include "gf3d_types.h"
 
 typedef struct shape_s  shape_t;
-typedef struct body_s   body_t;
 
 typedef struct
 {

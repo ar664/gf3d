@@ -15,11 +15,6 @@ void physics_system_update(){
     int i, j;
     int collision, bodyCheck;
     entity_t *ent;
-    Vector3D friction;
-    vector3d_set(friction,
-                 PHYSICS_FRICTION,
-                 PHYSICS_FRICTION,
-                 PHYSICS_FRICTION);
 
     //Move Objects
     for(i = 0; i < bodyCount; i++){
@@ -58,7 +53,7 @@ CHANGE:
                 collision = shape_shape_overlap(bodyList[i].ent->shape, bodyList[j].ent->shape);
                 if(collision)
                 {
-                    slog("Pos 1: %d, %d, %d", bodyList[i].ent->pos.x,bodyList[i].ent->pos.y,bodyList[i].ent->pos.z) ;
+                    slog("Pos 1: %f, %f, %f", bodyList[i].ent->pos.x,bodyList[i].ent->pos.y,bodyList[i].ent->pos.z) ;
                     if(bodyList[i].ent->Touch){
                         bodyList[i].ent->Touch(bodyList[i].ent, bodyList[j].ent);
                     }
