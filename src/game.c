@@ -11,6 +11,7 @@
 #include "gf3d_camera.h"
 #include "gf3d_vector.h"
 #include "gf3d_texture.h"
+#include "gf3d_audio.h"
 #include "entity.h"
 #include "tile.h"
 #include "physics.h"
@@ -23,6 +24,7 @@ int main(int argc,char *argv[])
     Uint32 bufferFrame = 0;
     VkCommandBuffer commandBuffer;
     entity_t *camEntity, *entity2, *entity3, *entity4;
+    Mix_Music *music;
     //Model *model;
     //Model *model2;
     
@@ -39,8 +41,14 @@ int main(int argc,char *argv[])
         0,                      //fullscreen
         1                       //validation
     );
+    gf3d_audio_init(AUDIO_DEFAULT_MAX_SOUNDS,
+                    AUDIO_DEFAULT_MAX_CHANNELS,
+                    AUDIO_DEFAULT_CHANNEL_GROUPS,
+                    1,
+                    1,
+                    1);
     entity_system_init();
-    //tile_system_init();
+    tile_system_init();
     physics_system_init();
 
     // main game loop
@@ -48,9 +56,13 @@ int main(int argc,char *argv[])
     slog("vgraphics.ubo count = %u",gf3d_vgraphics_get_ubo_count());
 
     //entity1 = entity_load("cube");
-
-    //tile_load(0, 0, "cube");
-    //tile_load(0, 0, "tile");
+    music = Mix_LoadMUS("music/better.mp3");
+    if(!music){
+        slog("Music Error: %s", Mix_GetError());
+    } else{
+        Mix_PlayMusic(music, -1);
+    }
+    
 
     camEntity = entity_load("");
     if(!camEntity){
@@ -61,7 +73,9 @@ int main(int argc,char *argv[])
                                 CAMERA_DEFUALT_Y,
                                 CAMERA_DEFUALT_Z);
     
-
+    tile_load(0, 0, "tile");
+    //tile_load(0, 0, "tile");
+    
     entity2 = entity_load("cube");
     entity2->pos = vector3d(0,0,-5);
     entity2->relative_rotation.x = 90;
@@ -81,9 +95,9 @@ int main(int argc,char *argv[])
     entity4->pos.x = 5;
     entity4->pos.y = -5;
     entity4->pos.z = 0;
-    entity4->Touch = entity_touch_destroy_other;
+    entity4->Touch = NULL;//entity_touch_destroy_other;
     physics_add_body(entity4);
-
+    
     while(!done)
     {
         SDL_PumpEvents();   // update SDL's internal event structures

@@ -15,7 +15,6 @@ struct tile_s {
     int         x;              /**< X position of tile */
     int         y;              /**< Y position of tile */
     entity_t   *building;       /**< Building tied to this tile */
-    entity_t   *ent;            /**< Entity tied to this tile */
     char       *name;           /**< Name of the tile */
 
 };

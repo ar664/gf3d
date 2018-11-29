@@ -49,6 +49,10 @@ entity_t *entity_new(){
 entity_t *entity_load(char *model){
     entity_t *ent;
     ent = entity_new();
+    if(!ent){
+        return NULL;
+    }
+    ent->name = model;
     ent->model = gf3d_model_load(model);
     ent->shape = shape_load(model);
     ent->Think = NULL;//&entity_generic_think;
@@ -135,11 +139,18 @@ void entity_think_camera(entity_t *self){
         self->pos.y += 0.1;
     } else if(entity_keys[SDL_SCANCODE_S]){
         self->pos.y -= 0.1;
-    } else if(entity_keys[SDL_SCANCODE_A]){
+    }
+    if(entity_keys[SDL_SCANCODE_A]){
         self->pos.x += 0.1;
     } else if(entity_keys[SDL_SCANCODE_D]){
         self->pos.x -= 0.1;
     }
+    if(entity_keys[SDL_SCANCODE_E]){
+        self->pos.z += 0.1;
+    } else if(entity_keys[SDL_SCANCODE_Q]){
+        self->pos.z -= 0.1;
+    }
+
 
     SDL_GetMouseState(&x, &y);
     self->relative_rotation.x = ( camera_get_height() / (float) 2 - y ) / (float) 150;
