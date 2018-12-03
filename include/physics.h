@@ -63,5 +63,13 @@ entity_t *physics_raycast(Ray ray);
  */
 entity_t *physics_raycast_point_on_screen(Vector2D point);
 
+/**
+ * @brief Find the closest entity to this entity of type layer
+ * 
+ * @param self      The entity being compared 
+ * @param layer     The type of entity we're looking for
+ * @return entity_t* The closest entity of type, if not NULL
+ */
+entity_t *physics_closest_entity(entity_t *self, int layer);
 
 #endif

@@ -95,11 +95,11 @@ Uint8 shape_sphere_overlap(Sphere a, Sphere b);
 /**
  * @brief Check if a sphere and a cube overlap
  * 
- * @param a     Sphera a
- * @param b     Cube b
+ * @param s     Sphera
+ * @param c     Cube
  * @return Uint8 True or False
  */
-Uint8 shape_sphere_cube_overlap(Sphere a, Cube b);
+Uint8 shape_sphere_cube_overlap(Sphere s, Cube c);
 
 /**
  * @brief Check if two cubes overlap
@@ -118,6 +118,19 @@ Uint8 shape_cube_overlap(Cube a, Cube b);
  * @return Uint8 True of False
  */
 Uint8 shape_point_in_sphere(Vector3D p,Sphere c);
+
+/**
+ * @brief Check if a 3D point is inside a cube
+ * 
+ * @param p     Point
+ * @param c     Cube
+ * @return Uint8 True or False
+ */
+Uint8 shape_point_in_cube(Vector3D p, Cube c);
+
+Uint8 shape_edge_intersect(Edge a, Edge b);
+
+Uint8 shape_edge_cube_overlap(Edge e, Cube c);
 
 /**
  * @brief Check whether two shapes are overlaped

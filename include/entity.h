@@ -13,7 +13,8 @@ typedef struct entity_s entity_t;
 enum Layer {
     LAYER_NULL      =   0,
     LAYER_PLAYER    =   1,
-    LAYER_MISC      =   1<<2
+    LAYER_ENEMY     =   1<<2,
+    LAYER_MISC      =   1<<3
 };
 
 /**
@@ -28,6 +29,7 @@ struct entity_s{
 
     int                     think_next;         /**< Next time to update this entity */
     int                     in_use;             /**< Check whether this entity spot is in use */
+    int                     layer;              /**< The owner of the entity (Player, Enemy, Building)*/
     char                   *name;               /**< The name of the entity */
     
     Vector3D                scale;              /**< Scale for model in x,y,z */
@@ -47,6 +49,8 @@ struct entity_s{
     Vector3D                axis;               /**< Axis of rotation */
     Vector3D                rotation;           /**< Rotation in degrees, used to keep track of changes in relative_rotation */
     Vector3D                relative_rotation;  /**< Change in rotation in a frame */
+
+    void                    *extra_data;        /**< Used for interfaces such as tiles to referance itsefl */
 
     void (*Think)(entity_t *self);
     void (*Update)(entity_t *self);

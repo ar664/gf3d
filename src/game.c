@@ -15,7 +15,26 @@
 #include "entity.h"
 #include "tile.h"
 #include "physics.h"
+#include "game.h"
 
+typedef struct{
+    int         points;
+    int         resource;
+    int         waveCount;
+    int         wave;
+    entity_t  **enemy_list;
+    
+}gM;
+
+gM gameManager = {0};
+
+void game_points_add(int points){
+    gameManager.points += points;
+}
+
+void game_resource_add(int resource){
+    gameManager.resource += resource;
+}
 
 int main(int argc,char *argv[])
 {
@@ -56,7 +75,7 @@ int main(int argc,char *argv[])
     slog("vgraphics.ubo count = %u",gf3d_vgraphics_get_ubo_count());
 
     //entity1 = entity_load("cube");
-    music = Mix_LoadMUS("music/better.mp3");
+    music = Mix_LoadMUS("music/better.ogg");
     if(!music){
         slog("Music Error: %s", Mix_GetError());
     } else{

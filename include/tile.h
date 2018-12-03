@@ -5,6 +5,8 @@
 #include "gf3d_vector.h"
 #include "entity.h"
 
+#define TILE_THINK_TIME 600
+
 typedef struct tile_s tile_t;
 
 
@@ -16,7 +18,8 @@ struct tile_s {
     int         y;              /**< Y position of tile */
     entity_t   *building;       /**< Building tied to this tile */
     char       *name;           /**< Name of the tile */
-
+    int         resource_count;  /**<Amount of resources left in building*/
+    int         resource_gen;    /**<Amount of resources to mine each tick*/
 };
 
 void tile_system_init();

@@ -66,7 +66,16 @@ Uint8 shape_point_in_sphere(Vector3D p,Sphere c)
     return 0;
 }
 
-Uint8 shape_sphere_cube_overlap(Sphere a, Cube b){
+Uint8 shape_point_in_cube(Vector3D p,Cube c)
+{
+    if ((p.x >= c.x) && (p.x <= c.x + c.width)&&
+        (p.y >= c.y) && (p.y <= c.y + c.height)&&
+        (p.z >= c.z) && (p.z <= c.z + c.depth))
+        return 1;
+    return 0;
+}
+
+Uint8 shape_sphere_cube_overlap(Sphere s, Cube c){
     int i,j,k;
     int width, height, depth;
     
@@ -77,10 +86,10 @@ Uint8 shape_sphere_cube_overlap(Sphere a, Cube b){
         {
             for(k = 0; k < 2; k++)
             {
-                width = i * b.width;
-                height = j* b.height;
-                depth = k * b.depth;
-                if (shape_point_in_sphere(vector3d(b.x+width,b.y+height,b.z+depth),a))
+                width = i * c.width;
+                height = j* c.height;
+                depth = k * c.depth;
+                if (shape_point_in_sphere(vector3d(c.x+width,c.y+height,c.z+depth),s))
                 {
                     return 1;
                 }
@@ -102,6 +111,34 @@ Uint8 shape_cube_overlap(Cube a, Cube b){
         return 0;
     }
     return 1;
+}
+
+Uint8 shape_edge_cube_overlap(Edge e, Cube c){
+    Uint8 ret = 0;
+    if (gf2d_edge_intersect_poc(e,gf2d_edge(b.x,b.y,b.x+b.w,b.y),poc,NULL))//top
+    {
+        ret = 1;
+    }
+    if (gf2d_edge_intersect_poc(e,gf2d_edge(b.x,b.y,b.x,b.y+b.h),poc,NULL))//left
+    {
+        ret |= 2;
+    }
+    if (gf2d_edge_intersect_poc(e,gf2d_edge(b.x,b.y+b.h,b.x+b.w,b.y+b.h),poc,NULL))//bottom
+    {
+        ret |= 4;
+    }
+    if (gf2d_edge_intersect_poc(e,gf2d_edge(r.x+r.w,r.y,r.x+r.w,r.y+r.h),poc,NULL))//right
+    {
+        ret |= 8;
+    }
+    
+    if ((gf2d_point_in_rect(vector2d(e.x1,e.y1),b))||
+        (gf2d_point_in_rect(vector2d(e.x2,e.y2),b)))
+    {
+        // if either end point is within the rect, we have a collision
+        return 1;
+    }
+    return 0;
 }
 
 Uint8 shape_shape_overlap(shape_t a, shape_t b){
@@ -131,7 +168,7 @@ Uint8 shape_shape_overlap(shape_t a, shape_t b){
                     return shape_cube_overlap(b.shape.cube, a.shape.cube);
                     break;
                 case(ST_EDGE):
-                    return 0;
+                    return shape_edge_cube_overlap(b.shape.edge, a.shape.cube);
                     break;
                 default:
                     return 0;
