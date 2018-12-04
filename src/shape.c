@@ -113,27 +113,59 @@ Uint8 shape_cube_overlap(Cube a, Cube b){
     return 1;
 }
 
+Uint8 shape_edge_intersect(Edge a, Edge b){
+    float Ua,Ub,Uden;
+    Vector3D cross;
+    vector3d_cross_product(&cross, 
+                           vector3d(b.x2 - b.x2,
+                                    b.y2 - b.y1,
+                                    b.z2 - b.z1),
+                           vector3d(a.x2 - a.x1,
+                                    a.y2 - a.y1,
+                                    a.z2 - a.y1));
+    Uden = ((b.y2 - b.y1)*(a.x2 - a.x1)) - ((b.x2 - b.x1)*(a.y2 - a.y1));
+    if(Uden == 0)
+    {
+        return 0;/*parallel, can't hit*/
+    }
+
+    Ua = (((b.x2 - b.x1)*(a.y1 - b.y1))-((b.y2 - b.y1)*(a.x1 - b.x1))) / Uden;
+    Ub = (((a.x2 - a.x1)*(a.y1 - b.y1))-((a.y2 - a.y1)*(a.x1 - b.x1))) / Uden;
+
+  
+    if((Ua >= 0) && (Ua <= 1) && (Ub >= 0) && ( Ub <= 1))
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
 Uint8 shape_edge_cube_overlap(Edge e, Cube c){
     Uint8 ret = 0;
-    if (gf2d_edge_intersect_poc(e,gf2d_edge(b.x,b.y,b.x+b.w,b.y),poc,NULL))//top
+    int i,j,k;
+    int width, height, depth;
+    
+    //TODO: Make this loop into a preprocessor command
+    for(i = 0; i < 2; i++)
     {
-        ret = 1;
-    }
-    if (gf2d_edge_intersect_poc(e,gf2d_edge(b.x,b.y,b.x,b.y+b.h),poc,NULL))//left
-    {
-        ret |= 2;
-    }
-    if (gf2d_edge_intersect_poc(e,gf2d_edge(b.x,b.y+b.h,b.x+b.w,b.y+b.h),poc,NULL))//bottom
-    {
-        ret |= 4;
-    }
-    if (gf2d_edge_intersect_poc(e,gf2d_edge(r.x+r.w,r.y,r.x+r.w,r.y+r.h),poc,NULL))//right
-    {
-        ret |= 8;
+        for(j = 0; j < 2; j++)
+        {
+            for(k = 0; k < 2; k++)
+            {
+                width = i * c.width;
+                height = j* c.height;
+                depth = k * c.depth;
+                if (shape_point_in_cube(vector3d(c.x+width,c.y+height,c.z+depth),c))
+                {
+                    return 1;
+                }
+            }
+        }
     }
     
-    if ((gf2d_point_in_rect(vector2d(e.x1,e.y1),b))||
-        (gf2d_point_in_rect(vector2d(e.x2,e.y2),b)))
+    if ((shape_point_in_cube(vector3d(e.x1,e.y1, e.z1),c))||
+        (shape_point_in_cube(vector3d(e.x2,e.y2, e.z2),c)))
     {
         // if either end point is within the rect, we have a collision
         return 1;

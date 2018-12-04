@@ -53,7 +53,7 @@ CHANGE:
                 collision = shape_shape_overlap(bodyList[i].ent->shape, bodyList[j].ent->shape);
                 if(collision)
                 {
-                    slog("Pos 1: %f, %f, %f", bodyList[i].ent->pos.x,bodyList[i].ent->pos.y,bodyList[i].ent->pos.z) ;
+                    //slog("Pos 1: %f, %f, %f", bodyList[i].ent->pos.x,bodyList[i].ent->pos.y,bodyList[i].ent->pos.z) ;
                     if(bodyList[i].ent->Touch){
                         bodyList[i].ent->Touch(bodyList[i].ent, bodyList[j].ent);
                     }

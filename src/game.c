@@ -92,7 +92,8 @@ int main(int argc,char *argv[])
                                 CAMERA_DEFUALT_Y,
                                 CAMERA_DEFUALT_Z);
     
-    tile_load(0, 0, "tile");
+    tile_load(0, 0, "resource");
+    tile_load(1, 1, "unitFlying");
     //tile_load(0, 0, "tile");
     
     entity2 = entity_load("cube");

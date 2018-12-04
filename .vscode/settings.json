@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "entity.h": "c",
+        "gf3d_pipeline.h": "c",
+        "simple_logger.h": "c",
+        "gf3d_model.h": "c",
+        "physics.h": "c",
+        "simple_json.h": "c"
+    }
+}

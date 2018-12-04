@@ -1,6 +1,7 @@
 #include "simple_logger.h"
 #include "simple_json.h"
 #include "tile.h"
+#include "physics.h"
 #include "game.h"
 
 #define TILE_MAX_X  10
@@ -41,6 +42,10 @@ void tile_generate_resource(entity_t *self){
         return;
     } else {
         self->think_next = TILE_RESOURCE_TICK;
+    }
+    if(tile->resource_gen <= 0 )
+    {
+        return;
     }
     
     if( tile->resource_gen > tile->resource_count) {
@@ -83,42 +88,151 @@ void tile_touch_gather_minion(entity_t *self, entity_t *other){
 }
 
 void tile_generate_unit(entity_t *self){
+    tile_t *tile;
+    entity_t *ent;
+    int i, j, x, y, pos;
+    if(!self){
+        return;
+    }
+    if(!self->extra_data){
+        return;
+    }
+    if(self->think_next == -1)
+    {
+        return;
+    }
+    tile = (tile_t*) self->extra_data;
 
+    //Check adjacent tiles for free spots
+    for(i = 0; i < 2; i++){
+
+        for(j = 0; i < 2; j++){
+            x = tile->x + (i%2 ? 1 : -1);
+            y = tile->y + (j%2 ? 1 : -1);
+
+            if(x < 0 || x > TILE_MAX_X || y < 0 || y > TILE_MAX_Y)
+            {
+                break;
+            }
+            pos = y + x*TILE_MAX_Y;
+            if(tile_list[pos].buildable){
+                ent = entity_load(tile->unit);
+                if(!ent)
+                {
+                    return;
+                }
+                vector3d_copy(ent->pos, tile_get_real_position(x, y));
+                physics_add_body(ent);
+                break;
+            }
+        }
+        
+    }
+    self->think_next = -1;
+
+
+}
+
+int tile_get_memory_position(int x, int y){
+    return (y + x*TILE_MAX_Y);
+}
+
+
+Vector3D tile_get_real_position(int x, int y){
+    Vector3D a;
+    a.x = -x*TILE_STEP+TILE_OFFSET;
+    a.y = -y*TILE_STEP+TILE_OFFSET;
+    a.z = TILE_DEPTH;
+    return a;
 }
 
 void *tile_get_think_func(char *tileName){
     return NULL;
 }
 
-Vector2D tile_get_dimensions(char *tileName){
-    Vector2D a;
-    a.x = 1;
-    a.y = 1;
-    return a;
-}
-
 void tile_load(int x, int y, char *tileName)
 {
-    Vector2D dimensions;
-    int pos = y + x*TILE_MAX_Y;
+    char fn[128];
+    char *value, *unit;
+    SJson *json, *typeJ, *unitJ, *genJ, *countJ;
 
+    int pos = tile_get_memory_position(x, y);
     tile_list[pos].building = entity_load(tileName);
-
     if(!tile_list[pos].building){
         return;
     }
+
+    sprintf(fn, "json/%s.json", tileName);
+    json = sj_load(fn);
+
+    if(json) {
+
+        typeJ = sj_object_get_value(json, "type");
+        
+        if(!typeJ)
+        {
+            slog("json no type, tile!");
+            sj_free(json);
+            return;
+        }
+
+        value = sj_get_string_value(typeJ);
+        if(strcmp(TILE_TYPE_RESOURCE_STR, value) == 0) 
+        {
+
+            countJ = sj_object_get_value(json, "count");
+            if(!countJ)
+            {
+                slog("json no count!");
+                sj_free(json);
+                return;
+            }
+            sj_get_integer_value(countJ, &tile_list[pos].resource_count);
+
+            genJ = sj_object_get_value(json, "gen");
+            if(!genJ)
+            {
+                slog("json no gen!");
+                sj_free(json);
+                return;
+            }
+            sj_get_integer_value(genJ, &tile_list[pos].resource_gen);
+
+            tile_list[pos].building->Think = tile_generate_resource;
+            tile_list[pos].building->Touch = tile_touch_gather_minion;
+            tile_list[pos].building->think_next = TILE_RESOURCE_TICK;
+
+        } else if (strcmp(TILE_TYPE_UNIT_STR, value) == 0) 
+        {
+
+            unitJ = sj_object_get_value(json, "unit");
+            if(!unitJ)
+            {
+                slog("json no unit!");
+                sj_free(json);
+                return;
+            }
+            unit  = malloc(sizeof(char)*128);
+            strcpy(unit, sj_get_string_value(unitJ));
+
+            tile_list[pos].building->Think = tile_generate_unit;
+            tile_list[pos].building->think_next = -1;
+            tile_list[pos].unit = unit;
+
+        } else {
+
+            sj_free(json);
+        }
+
+    }
+    
     tile_list[pos].building->relative_rotation.x = 45;
-    tile_list[pos].building->pos.x = -x*TILE_STEP+TILE_OFFSET;
-    tile_list[pos].building->pos.y = -y*TILE_STEP+TILE_OFFSET;
-    tile_list[pos].building->pos.z = TILE_DEPTH;
+
+    vector3d_copy(tile_list[pos].building->pos, tile_get_real_position(x, y));
     
 
     //The extra data used for think function
     tile_list[pos].building->extra_data = (void*) &tile_list[pos];
-
-    dimensions = tile_get_dimensions(tileName);
-    tile_list[pos].width = dimensions.x;
-    tile_list[pos].height = dimensions.y;
 
 
 }
