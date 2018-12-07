@@ -57,6 +57,9 @@ CHANGE:
                     if(bodyList[i].ent->Touch){
                         bodyList[i].ent->Touch(bodyList[i].ent, bodyList[j].ent);
                     }
+                    if(bodyCount != bodyCheck){
+                        goto CHANGE;
+                    }
                     if(bodyList[j].ent->Touch){
                         bodyList[j].ent->Touch(bodyList[j].ent, bodyList[i].ent);
                     }

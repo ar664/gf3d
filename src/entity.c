@@ -6,6 +6,8 @@
 #include "simple_logger.h"
 #include "SDL.h"
 #include "gf3d_vgraphics.h"
+#include "path.h"
+#include "tile.h"
 
 entity_t* entity_list;
 Uint8 *entity_keys = NULL;
@@ -67,6 +69,49 @@ entity_t *entity_load(char *model){
 }
 
 //THINK FUNCTIONS START 
+
+void entity_think_test_path(entity_t *self){
+    path_t *path;
+    Point2D startPoint,randPoint;
+    Uint32 x, y;
+    if(!self){
+        return;
+    }
+    path = (path_t*)self->extra_data;
+    if(!path)
+    {
+        self->extra_data = malloc(sizeof(path_t));
+        path = (path_t*) self->extra_data;
+        startPoint.x = 0;
+        startPoint.y = 0;
+        randPoint.x = rand()%TILE_MAX_X;
+        randPoint.y = rand()%TILE_MAX_Y;
+        *path = path_get_path(startPoint, randPoint);
+        path->current = 0;
+    }
+    if(self->think_next == 0)
+    {
+        if(path->current >= path->count || path->count == 0)
+        {
+            startPoint.x = path->path[path->count-1].x;
+            startPoint.y = path->path[path->count-1].y;
+            randPoint.x = rand()%TILE_MAX_X;
+            randPoint.y = rand()%TILE_MAX_Y;
+            path_free(path);
+            *path = path_get_path(startPoint, randPoint);
+            slog("Start point: %d %d End point: %d %d", startPoint.x, startPoint.y, randPoint.x, randPoint.y);
+            path->current = 0;
+            return;
+        }
+        x = path->path[path->current].x;
+        y = path->path[path->current].y;
+        self->pos = tile_get_real_position(x, y);
+        path->current++;
+        self->think_next = TILE_RESOURCE_TICK;
+        slog("Pathed %d, x: %d , y: %d", path->current, path->path[path->current-1].x, path->path[path->current-1].y);
+    }
+    self->think_next--;
+}
 
 void entity_think_rotate_self_x(entity_t *self){
     int time;

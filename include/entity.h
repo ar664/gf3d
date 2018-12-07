@@ -98,10 +98,21 @@ void entity_system_draw(Uint32 bufferFrame, VkCommandBuffer commandBuffer);
 
 void entity_think_generic(entity_t *self);
 
+/**
+ * @brief The camera functions
+ * 
+ */
 void entity_think_camera(entity_t *self);
 
 
 void entity_think_rotate_self_x(entity_t *self);
+
+/**
+ * @brief Test the pathing algorith by going to random spots on the map
+ * 
+ * @param self 
+ */
+void entity_think_test_path(entity_t *self);
 
 /**
  * @brief When this entity touches another entity, destroy the other

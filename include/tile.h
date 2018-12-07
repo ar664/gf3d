@@ -8,8 +8,11 @@
 #define TILE_TYPE_RESOURCE_STR  "resource"
 #define TILE_TYPE_UNIT_STR      "unit"
 
-typedef struct tile_s tile_t;
+#define TILE_MAX_X  10
+#define TILE_MAX_Y  10
+#define TILE_RESOURCE_TICK 600
 
+typedef struct tile_s tile_t;
 
 struct tile_s {
     Uint8       buildable;      /**< Check whether a building can be built onto this tile */
@@ -34,11 +37,20 @@ void tile_load_map(char *mapName);
 /**
  * @brief Load a tile into the scene. Mostly Used for buildings.
  * 
- * @param x         
- * @param y         Y position of tile
+ * @param x         X coord of tile
+ * @param y         Y coord of tile
  * @param tileName  The name of the tile
  */
 void tile_load(int x, int y, char *tileName);
+
+/**
+ * @brief Get the tile that is in x , y
+ * 
+ * @param x         X Coordinate of tile 
+ * @param y         Y Coordinate of tile
+ * @return tile_t* 
+ */
+tile_t *tile_get_tile(int x, int y);
 
 /**
  * @brief Get the world position of the tile space located (x,y)

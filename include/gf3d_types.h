@@ -20,6 +20,12 @@
 
 typedef short unsigned int Bool;
 
+typedef struct
+{
+    int     x;
+    int     y;    
+}Point2D;
+
 #ifndef false
 #define false 0
 #endif

@@ -8,6 +8,13 @@ typedef struct shape_s  shape_t;
 
 typedef struct
 {
+    Vector3D p1;
+    Vector3D p2;
+    Vector3D p3;
+}Triangle;
+
+typedef struct
+{
     float x1,y1,x2,y2,z1,z2;
 }Edge;
 

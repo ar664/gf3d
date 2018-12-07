@@ -44,8 +44,7 @@ int main(int argc,char *argv[])
     VkCommandBuffer commandBuffer;
     entity_t *camEntity, *entity2, *entity3, *entity4;
     Mix_Music *music;
-    //Model *model;
-    //Model *model2;
+    Vector2D samplePos;
     
     init_logger("gf3d.log");    
     slog("gf3d begin");
@@ -94,29 +93,19 @@ int main(int argc,char *argv[])
     
     tile_load(0, 0, "resource");
     tile_load(1, 1, "unitFlying");
-    //tile_load(0, 0, "tile");
     
     entity2 = entity_load("cube");
     entity2->pos = vector3d(0,0,-5);
     entity2->relative_rotation.x = 90;
     entity_scale_entity(entity2, 50, 50, 1);
+    physics_add_body(entity2);
 
 
     entity3 = entity_load("cube");
-    entity3->Think = entity_think_rotate_self_x;
+    entity3->Think = entity_think_test_path;
     entity3->Touch = NULL;
-    entity3->pos.x = 5;
-    entity3->pos.y = 5;
-    entity3->pos.z = 0;
-    physics_add_body(entity3);
+    vector3d_copy(entity3->pos,tile_get_real_position(0,10)); 
 
-    entity4 = entity_load("cube");
-    entity4->velocity.y = 0.001;
-    entity4->pos.x = 5;
-    entity4->pos.y = -5;
-    entity4->pos.z = 0;
-    entity4->Touch = NULL;//entity_touch_destroy_other;
-    physics_add_body(entity4);
     
     while(!done)
     {

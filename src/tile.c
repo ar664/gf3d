@@ -4,12 +4,10 @@
 #include "physics.h"
 #include "game.h"
 
-#define TILE_MAX_X  10
-#define TILE_MAX_Y  10
-#define TILE_STEP   2.5
+
 #define TILE_OFFSET 25  
+#define TILE_STEP   2.5
 #define TILE_DEPTH  -4
-#define TILE_RESOURCE_TICK 600
 
 tile_t tile_list[TILE_MAX_X*TILE_MAX_Y];
 
@@ -79,7 +77,7 @@ void tile_touch_gather_minion(entity_t *self, entity_t *other){
         }
         
         tile->resource_gen++;
-
+        slog("Minion added");
         game_points_add(500);
     }
     
@@ -123,14 +121,29 @@ void tile_generate_unit(entity_t *self){
                 }
                 vector3d_copy(ent->pos, tile_get_real_position(x, y));
                 physics_add_body(ent);
-                break;
+                self->think_next = -1;
+                return;
             }
         }
         
     }
+    slog("No empty spots for unit");
     self->think_next = -1;
 
 
+}
+
+tile_t *tile_get_tile(int x, int y){
+    if(x > TILE_MAX_X || 
+       y > TILE_MAX_Y ||
+       x < 0          ||
+       y < 0)
+    {
+        slog("Tile out of range!");
+        return NULL;
+    }
+
+    return &tile_list[tile_get_memory_position(x,y)];
 }
 
 int tile_get_memory_position(int x, int y){
@@ -146,9 +159,6 @@ Vector3D tile_get_real_position(int x, int y){
     return a;
 }
 
-void *tile_get_think_func(char *tileName){
-    return NULL;
-}
 
 void tile_load(int x, int y, char *tileName)
 {
@@ -225,8 +235,6 @@ void tile_load(int x, int y, char *tileName)
         }
 
     }
-    
-    tile_list[pos].building->relative_rotation.x = 45;
 
     vector3d_copy(tile_list[pos].building->pos, tile_get_real_position(x, y));
     
@@ -234,6 +242,7 @@ void tile_load(int x, int y, char *tileName)
     //The extra data used for think function
     tile_list[pos].building->extra_data = (void*) &tile_list[pos];
 
+    physics_add_body(tile_list[pos].building);
 
 }
 
@@ -245,6 +254,11 @@ void tile_system_shutdown(){
     {
         if(tile_list[i].building){
             tile_list[i].building->Destroy(tile_list[i].building);
+            tile_list[i].building = NULL;
+        }
+        if(tile_list[i].unit){
+            free(tile_list[i].unit);
+            tile_list[i].unit = NULL;
         }
 
         memset(&tile_list[i], 0, sizeof(tile_t));
