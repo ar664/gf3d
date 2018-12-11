@@ -93,8 +93,14 @@ void entity_think_test_path(entity_t *self){
     {
         if(path->current >= path->count || path->count == 0)
         {
-            startPoint.x = path->path[path->count-1].x;
-            startPoint.y = path->path[path->count-1].y;
+            if(path->count == 0)
+            {
+                startPoint = tile_get_closest_point(self->pos);
+            } else 
+            {
+                startPoint.x = path->path[path->count-1].x;
+                startPoint.y = path->path[path->count-1].y;
+            }
             randPoint.x = rand()%TILE_MAX_X;
             randPoint.y = rand()%TILE_MAX_Y;
             path_free(path);

@@ -70,4 +70,12 @@ Vector3D  tile_get_real_position(int x, int y);
  */
 int tile_get_memory_position(int x, int y);
 
+/**
+ * @brief Get the approximate tile that is at position pos
+ * 
+ * @param pos 
+ * @return Point2D 
+ */
+Point2D tile_get_closest_point(Vector3D pos);
+
 #endif

@@ -1,5 +1,6 @@
 #include "simple_logger.h"
 #include "simple_json.h"
+#include <math.h>
 #include "tile.h"
 #include "physics.h"
 #include "game.h"
@@ -150,6 +151,12 @@ int tile_get_memory_position(int x, int y){
     return (y + x*TILE_MAX_Y);
 }
 
+Point2D tile_get_closest_point(Vector3D pos){
+    Point2D point;
+    point.x = (int) -roundf( (pos.x-TILE_OFFSET)/TILE_STEP );
+    point.y = (int) -roundf( (pos.y-TILE_OFFSET)/TILE_STEP );
+    return point;
+}
 
 Vector3D tile_get_real_position(int x, int y){
     Vector3D a;

@@ -35,7 +35,7 @@ path_t path_get_path(Point2D start, Point2D end)
         }
     }
 
-    path.count = 100;
+    path.count = max;
     return path;
 }
 
@@ -62,7 +62,7 @@ Point2D path_get_step(Point2D start, Point2D end)
     chck = tile_get_tile(x, y);
     if(chck)
     {
-        if(!chck->buildable)
+        if(!chck->building)
         {
             step.x = x;
             step.y = y;
@@ -82,7 +82,7 @@ Point2D path_get_step(Point2D start, Point2D end)
     chck = tile_get_tile(x, y);
     if(chck)
     {
-        if(!chck->buildable)
+        if(!chck->building)
         {
             step.x = x;
             step.y = y;

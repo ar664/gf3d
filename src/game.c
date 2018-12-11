@@ -38,7 +38,7 @@ void game_resource_add(int resource){
 
 int main(int argc,char *argv[])
 {
-    int done = 0;
+    int done = 0, i;
     const Uint8 * keys;
     Uint32 bufferFrame = 0;
     VkCommandBuffer commandBuffer;
@@ -93,7 +93,11 @@ int main(int argc,char *argv[])
     
     tile_load(0, 0, "resource");
     tile_load(1, 1, "unitFlying");
-    
+    for(i = 0; i < 10; i++)
+    {
+        tile_load(rand()%TILE_MAX_X, rand()%TILE_MAX_Y, "resource");
+    }
+
     entity2 = entity_load("cube");
     entity2->pos = vector3d(0,0,-5);
     entity2->relative_rotation.x = 90;
