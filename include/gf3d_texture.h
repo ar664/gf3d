@@ -18,7 +18,15 @@ typedef struct
 
 
 void gf3d_texture_init(Uint32 max_textures);
+Texture *gf3d_texture_from_surface(SDL_Surface *surface);
 Texture *gf3d_texture_load(char *filename);
 void gf3d_texture_free(Texture *tex);
+
+/**
+ * @brief FOR TEXTURES RENDERED FOR SURFACE
+ * 
+ * @param tex 
+ */
+void gf3d_texture_delete(Texture *tex);
 
 #endif

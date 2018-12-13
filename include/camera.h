@@ -22,7 +22,7 @@ struct camera_s{
 #define CAMERA_DEFUALT_X    2
 #define CAMERA_DEFUALT_Y    20
 #define CAMERA_DEFUALT_Z    2
-#define CAMERA_DEFUALT_FOV  45*GF3D_DEGTORAD
+#define CAMERA_DEFUALT_FOV  60*GF3D_DEGTORAD
 #define CAMERA_DEFUALT_NEAR 0.1
 #define CAMERA_DEFUALT_FAR  100
 
@@ -53,6 +53,13 @@ void camera_get_view(Matrix4 out);
  * @return Matrix4 A pointer to the perspective of the camera
  */
 void camera_get_perspective(Matrix4 out);
+
+/**
+ * @brief Returns the position of the camera
+ * 
+ * @return Vector3D The postion of the camera
+ */
+Vector3D camera_get_position();
 
 int camera_get_width();
 int camera_get_height();

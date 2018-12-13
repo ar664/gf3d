@@ -41,6 +41,7 @@ typedef struct
     Uint32                      descriptorSetCount;
     VkBuffer                    ubo;
 
+
 }Model;
 
 
@@ -52,5 +53,7 @@ Model * gf3d_model_new();
 void gf3d_model_draw(Model *model,Uint32 bufferFrame,VkCommandBuffer commandBuffer);
 void gf3d_model_free(Model *model);
 
+//Used for gui in camera
+void gf3d_model_update_descriptor_sets(Model *model);
 
 #endif

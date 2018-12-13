@@ -15,6 +15,7 @@
 #include "entity.h"
 #include "tile.h"
 #include "physics.h"
+#include "text.h"
 #include "game.h"
 
 typedef struct{
@@ -42,9 +43,11 @@ int main(int argc,char *argv[])
     const Uint8 * keys;
     Uint32 bufferFrame = 0;
     VkCommandBuffer commandBuffer;
-    entity_t *camEntity, *entity2, *entity3, *entity4;
+    entity_t *camEntity, *entity2, *entity3, *uiEntity;
     Mix_Music *music;
-    Vector2D samplePos;
+    SDL_Rect uiRect;
+    SDL_Color uiColor;
+    //Vector2D samplePos;
     
     init_logger("gf3d.log");    
     slog("gf3d begin");
@@ -68,6 +71,8 @@ int main(int argc,char *argv[])
     entity_system_init();
     tile_system_init();
     physics_system_init();
+    
+    text_system_init("ttf/runescape_font.ttf", 14);
 
     // main game loop
     slog("gf3d main loop begin");
@@ -81,19 +86,40 @@ int main(int argc,char *argv[])
         Mix_PlayMusic(music, -1);
     }
     
+    uiRect.x = 0;
+    uiRect.y = 0;
+    uiRect.h = 200;
+    uiRect.w = 200;
 
-    camEntity = entity_load("");
+    uiColor.a = 255;
+    uiColor.r = 255;
+    uiColor.g = 0;
+    uiColor.b = 255;
+
+
+    camEntity = entity_load("camera");
     if(!camEntity){
         slog("Failed to load camEntity");
+        return -1;
     }
     camEntity->Think = entity_think_camera;
     camEntity->pos = vector3d(CAMERA_DEFUALT_X,
                                 CAMERA_DEFUALT_Y,
                                 CAMERA_DEFUALT_Z);
-    
+    camEntity->scale.y = 10;
+
+    uiEntity = entity_load("camera");
+    uiEntity->pos = vector3d(CAMERA_DEFUALT_X +1,
+                             CAMERA_DEFUALT_Y,
+                             CAMERA_DEFUALT_Z);
+    uiEntity->extra_data = text_load("Hello world", uiRect,uiColor);
+    uiEntity->model->texture = ((text_t *)uiEntity->extra_data)->texture;
+    gf3d_model_update_descriptor_sets(uiEntity->model);
+    //uiEntity->Think = entity_think_ui;
+
     tile_load(0, 0, "resource");
     tile_load(1, 1, "unitFlying");
-    for(i = 0; i < 10; i++)
+    for(i = 0; i < 3; i++)
     {
         tile_load(rand()%TILE_MAX_X, rand()%TILE_MAX_Y, "resource");
     }

@@ -6,8 +6,9 @@
 #include "simple_logger.h"
 #include "SDL.h"
 #include "gf3d_vgraphics.h"
-#include "path.h"
 #include "tile.h"
+#include "path.h"
+#include "text.h"
 
 entity_t* entity_list;
 Uint8 *entity_keys = NULL;
@@ -174,6 +175,22 @@ void entity_think_generic(entity_t *self){
     } */
 
     //self->pos.x += 0.005;
+}
+
+void entity_think_ui(entity_t *self)
+{
+    Vector3D pos;
+    if(!self)
+    {
+        slog("Tried to think NULL entity");
+        return;
+    }
+
+    pos = camera_get_position();
+    pos.y += 5;
+
+    self->pos = pos;
+    
 }
 
 void entity_think_camera(entity_t *self){

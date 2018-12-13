@@ -81,3 +81,7 @@ int camera_get_width() {
 int camera_get_height(){
     return Camera.height;
 }
+
+Vector3D camera_get_position(){
+    return Camera.pos;
+}

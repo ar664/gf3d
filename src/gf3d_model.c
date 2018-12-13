@@ -3,6 +3,7 @@
 #include "gf3d_vgraphics.h"
 #include "simple_logger.h"
 #include "gf3d_obj_load.h"
+#include "text.h"
 
 typedef struct
 {
@@ -117,6 +118,7 @@ Model * gf3d_model_load(char * filename)
     model->mesh = gf3d_mesh_load(assetname);
 
     snprintf(assetname,GF3DLINELEN,"images/%s.png",filename);
+
     model->texture = gf3d_texture_load(assetname);
     
     gf3d_model_setup(model);
@@ -156,6 +158,48 @@ void gf3d_model_draw(Model *model,Uint32 bufferFrame, VkCommandBuffer commandBuf
     gf3d_mesh_render(model->mesh,commandBuffer,&model->descriptorSets[bufferFrame]);
 }
 
+void gf3d_model_update_descriptor_sets(Model *model)
+{
+    int i;
+    VkDescriptorBufferInfo bufferInfo = {0};
+    VkDescriptorImageInfo imageInfo = {0};
+    VkWriteDescriptorSet descriptorWrite[2] = {0};
+
+    for (i = 0; i < gf3d_model.chain_length; i++)
+    {
+        slog("updating descriptor sets");
+        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        if(model->texture){
+            imageInfo.imageView = model->texture->textureImageView;
+            imageInfo.sampler = model->texture->textureSampler;
+        }
+        
+    
+        bufferInfo.buffer = model->ubo;
+        bufferInfo.offset = 0;
+        bufferInfo.range = sizeof(UniformBufferObject);        
+        
+        descriptorWrite[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrite[0].dstSet = model->descriptorSets[i];
+        descriptorWrite[0].dstBinding = 0;
+        descriptorWrite[0].dstArrayElement = 0;
+        descriptorWrite[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        descriptorWrite[0].descriptorCount = 1;
+        descriptorWrite[0].pBufferInfo = &bufferInfo;
+
+        descriptorWrite[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrite[1].dstSet = model->descriptorSets[i];
+        descriptorWrite[1].dstBinding = 1;
+        descriptorWrite[1].dstArrayElement = 0;
+        descriptorWrite[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        descriptorWrite[1].descriptorCount = 1;                        
+        descriptorWrite[1].pImageInfo = &imageInfo;
+        descriptorWrite[1].pTexelBufferView = NULL; // Optional
+
+        vkUpdateDescriptorSets(gf3d_model.device, 2, descriptorWrite, 0, NULL);
+    }
+}
+
 void gf3d_model_create_descriptor_sets(Model *model)
 {
     int i;
@@ -185,6 +229,7 @@ void gf3d_model_create_descriptor_sets(Model *model)
     }
     model->descriptorSetCount = gf3d_model.chain_length;
     TempBuffer = gf3d_vgraphics_get_uniform_buffer_by_usage();
+    model->ubo = TempBuffer;
 
     for (i = 0; i < gf3d_model.chain_length; i++)
     {
@@ -201,8 +246,6 @@ void gf3d_model_create_descriptor_sets(Model *model)
         bufferInfo.offset = 0;
         bufferInfo.range = sizeof(UniformBufferObject);        
 
-        model->ubo = bufferInfo.buffer;
-        
         descriptorWrite[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
         descriptorWrite[0].dstSet = model->descriptorSets[i];
         descriptorWrite[0].dstBinding = 0;

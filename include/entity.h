@@ -115,6 +115,13 @@ void entity_think_rotate_self_x(entity_t *self);
 void entity_think_test_path(entity_t *self);
 
 /**
+ * @brief Make the ui follow the camera
+ * 
+ * @param self 
+ */
+void entity_think_ui(entity_t *self);
+
+/**
  * @brief When this entity touches another entity, destroy the other
  * 
  * @param self  Entity that has touched
