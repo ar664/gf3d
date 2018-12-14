@@ -180,14 +180,28 @@ void entity_think_generic(entity_t *self){
 void entity_think_ui(entity_t *self)
 {
     Vector3D pos;
+    entity_t *camEntity;
     if(!self)
     {
         slog("Tried to think NULL entity");
         return;
     }
+    if(!self->extra_data)
+    {
+        slog("No camera entity for the ui");
+        return;
+    }
+    camEntity = (entity_t*) self->extra_data;
+
+    /* if(self->rotation.x > camEntity->rotation.x)
+    {
+        self->relative_rotation.x = self->rotation.x - camEntity->rotation.x;
+        self->rotation.x += -self->relative_rotation.x;
+    } */
+    //self->rotation = camEntity->rotation;
 
     pos = camera_get_position();
-    pos.y += 5;
+    pos.y -= 2.5;
 
     self->pos = pos;
     

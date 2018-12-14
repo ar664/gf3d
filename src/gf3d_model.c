@@ -238,6 +238,9 @@ void gf3d_model_create_descriptor_sets(Model *model)
         if(model->texture){
             imageInfo.imageView = model->texture->textureImageView;
             imageInfo.sampler = model->texture->textureSampler;
+        } else 
+        {
+            return;
         }
         
     

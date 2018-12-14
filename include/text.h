@@ -34,7 +34,7 @@ void text_system_init(char *font, int size);
 
 
 text_t *text_load(char *text, SDL_Rect rect, SDL_Color color);
-void text_draw(text_t *text, VkCommandBuffer commandBuffer);
+void text_draw(text_t *text,Uint32 bufferFrame, VkCommandBuffer commandBuffer);
 void text_free(text_t *text);
 
 #endif

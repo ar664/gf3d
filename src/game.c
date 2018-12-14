@@ -72,7 +72,7 @@ int main(int argc,char *argv[])
     tile_system_init();
     physics_system_init();
     
-    text_system_init("ttf/runescape_font.ttf", 14);
+    text_system_init("ttf/lazy.ttf", 28);
 
     // main game loop
     slog("gf3d main loop begin");
@@ -84,12 +84,13 @@ int main(int argc,char *argv[])
         slog("Music Error: %s", Mix_GetError());
     } else{
         Mix_PlayMusic(music, -1);
+        atexit(Mix_Quit);
     }
     
     uiRect.x = 0;
     uiRect.y = 0;
-    uiRect.h = 200;
-    uiRect.w = 200;
+    uiRect.h = 1024;
+    uiRect.w = 1024;
 
     uiColor.a = 255;
     uiColor.r = 255;
@@ -109,13 +110,14 @@ int main(int argc,char *argv[])
     camEntity->scale.y = 10;
 
     uiEntity = entity_load("camera");
-    uiEntity->pos = vector3d(CAMERA_DEFUALT_X +1,
-                             CAMERA_DEFUALT_Y,
+    uiEntity->pos = vector3d(CAMERA_DEFUALT_X,
+                             CAMERA_DEFUALT_Y-2.5,
                              CAMERA_DEFUALT_Z);
     uiEntity->extra_data = text_load("Hello world", uiRect,uiColor);
     uiEntity->model->texture = ((text_t *)uiEntity->extra_data)->texture;
-    gf3d_model_update_descriptor_sets(uiEntity->model);
-    //uiEntity->Think = entity_think_ui;
+    gf3d_model_update_descriptor_sets(uiEntity->model); 
+    uiEntity->Think = entity_think_ui;
+    uiEntity->extra_data = camEntity;
 
     tile_load(0, 0, "resource");
     tile_load(1, 1, "unitFlying");
@@ -166,6 +168,7 @@ int main(int argc,char *argv[])
     
     vkDeviceWaitIdle(gf3d_vgraphics_get_default_logical_device());    
     //cleanup
+    Mix_HaltMusic();
     slog("gf3d program end");
     slog_sync();
     return 0;

@@ -217,7 +217,6 @@ Texture *gf3d_texture_from_surface(SDL_Surface *surface)
     tex = gf3d_texture_new();
     if (!tex)
     {
-        SDL_FreeSurface(surface);
         return NULL;
     }
 
