@@ -55,6 +55,12 @@ void camera_get_view(Matrix4 out){
 
 }
 
+void camera_set_view(Matrix4 in){
+    if(!in) return;
+
+    memcpy(Camera.view, in, sizeof(Matrix4));
+}
+
 void camera_get_perspective(Matrix4 out){
     if(!out) return;
 

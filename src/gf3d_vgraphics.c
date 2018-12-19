@@ -21,6 +21,7 @@
 #include "gf3d_commands.h"
 #include "gf3d_texture.h"
 #include "gf3d_matrix.h"
+#include "text.h"
 
 #include "simple_logger.h"
 
@@ -161,7 +162,8 @@ void gf3d_vgraphics_init(
     gf3d_swapchain_setup_frame_buffers(gf3d_vgraphics.pipe);    
     
     gf3d_vgraphics_semaphores_create();
-    
+
+    text_system_init("ttf/lazy.ttf", 28, gf3d_vgraphics.device);
 }
 
 

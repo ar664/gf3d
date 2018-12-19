@@ -77,8 +77,11 @@ Texture *gf3d_texture_new()
 
 void gf3d_texture_delete(Texture *tex)
 {
+    if(!tex)
+    {
+        return;
+    }
     if ((!tex)||(!tex->_inuse))return;
-    
     if (tex->textureSampler != VK_NULL_HANDLE)
     {
         vkDestroySampler(gf3d_texture.device, tex->textureSampler, NULL);

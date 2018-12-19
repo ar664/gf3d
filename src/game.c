@@ -37,6 +37,16 @@ void game_resource_add(int resource){
     gameManager.resource += resource;
 }
 
+int game_points_get()
+{
+    return gameManager.points;
+}
+
+int game_resource_get()
+{
+    return gameManager.resource;
+}
+
 int main(int argc,char *argv[])
 {
     int done = 0, i;
@@ -72,7 +82,6 @@ int main(int argc,char *argv[])
     tile_system_init();
     physics_system_init();
     
-    text_system_init("ttf/lazy.ttf", 28);
 
     // main game loop
     slog("gf3d main loop begin");
@@ -117,7 +126,7 @@ int main(int argc,char *argv[])
     uiEntity->model->texture = ((text_t *)uiEntity->extra_data)->texture;
     gf3d_model_update_descriptor_sets(uiEntity->model); 
     uiEntity->Think = entity_think_ui;
-    uiEntity->extra_data = camEntity;
+    uiEntity->parent = camEntity;
 
     tile_load(0, 0, "resource");
     tile_load(1, 1, "unitFlying");

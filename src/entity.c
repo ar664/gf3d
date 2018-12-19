@@ -180,7 +180,13 @@ void entity_think_generic(entity_t *self){
 void entity_think_ui(entity_t *self)
 {
     Vector3D pos;
+    text_t *text;
     entity_t *camEntity;
+    const char *points = "Points : ";
+    const char *resources = "Resources : ";
+    char *gameText;
+    SDL_Rect uiRect;
+    SDL_Color uiColor;
     if(!self)
     {
         slog("Tried to think NULL entity");
@@ -188,10 +194,46 @@ void entity_think_ui(entity_t *self)
     }
     if(!self->extra_data)
     {
-        slog("No camera entity for the ui");
+        slog("No text for the ui");
         return;
     }
-    camEntity = (entity_t*) self->extra_data;
+
+    uiRect.x = 0;
+    uiRect.y = 0;
+    uiRect.h = 1024;
+    uiRect.w = 1024;
+
+    uiColor.a = 255;
+    uiColor.r = 255;
+    uiColor.g = 0;
+    uiColor.b = 255;
+
+
+    if(self->think_next <= 0)
+    {
+        text = (text_t*) self->extra_data;
+
+        gameText = malloc(sizeof(char)*256);
+        if(!gameText)
+        {
+            slog("Unable to alloc for gameText");
+            return;
+        }
+        strcpy(gameText, points);
+        sprintf(&gameText[strlen(gameText)], "%d\n", game_points_get());
+        strcpy(&gameText[strlen(gameText)], resources);
+        sprintf(&gameText[strlen(gameText)], "%d", game_resource_get());
+
+        text_update(text,gameText, uiRect, uiColor );
+
+        self->model->texture = text->texture;
+        gf3d_model_update_descriptor_sets(self->model);
+        self->think_next = 600;
+        free(gameText);
+    } else 
+    {
+        self->think_next--;
+    }
 
     /* if(self->rotation.x > camEntity->rotation.x)
     {

@@ -30,10 +30,11 @@ struct text_s
  * @brief Initialize TTF library
  * 
  */
-void text_system_init(char *font, int size);
+void text_system_init(char *font, int size, VkDevice device);
 
 
 text_t *text_load(char *text, SDL_Rect rect, SDL_Color color);
+void text_update(text_t *text, char *words, SDL_Rect rect, SDL_Color color);
 void text_draw(text_t *text,Uint32 bufferFrame, VkCommandBuffer commandBuffer);
 void text_free(text_t *text);
 

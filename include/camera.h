@@ -72,6 +72,13 @@ int camera_get_height();
 void camera_set_perspective(Matrix4 in);
 
 /**
+ * @brief Set the view matrix of the camera.
+ * 
+ * @param in A pointer to a view 
+ */
+void camera_set_view(Matrix4 in);
+
+/**
  * @brief Set the camera position
  * 
  * @param pos The position in (x,y,z) 

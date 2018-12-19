@@ -51,6 +51,7 @@ struct entity_s{
     Vector3D                relative_rotation;  /**< Change in rotation in a frame */
 
     void                    *extra_data;        /**< Used for interfaces such as tiles to referance itsefl */
+    char                    *text;              /**< Used for UI */
     
     void (*Think)(entity_t *self);
     void (*Update)(entity_t *self);
