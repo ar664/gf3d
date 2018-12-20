@@ -170,10 +170,16 @@ Vector3D tile_get_real_position(int x, int y){
 void tile_load(int x, int y, char *tileName)
 {
     char fn[128];
-    char *value, *unit;
+    char *value, *unitStr;
+    unit_t *unit;
     SJson *json, *typeJ, *unitJ, *genJ, *countJ;
 
     int pos = tile_get_memory_position(x, y);
+    if(tile_list[pos].building)
+    {
+        slog("Tried to build on settled land");
+        return;
+    }
     tile_list[pos].building = entity_load(tileName);
     if(!tile_list[pos].building){
         return;
@@ -229,12 +235,20 @@ void tile_load(int x, int y, char *tileName)
                 sj_free(json);
                 return;
             }
-            unit  = malloc(sizeof(char)*128);
-            strcpy(unit, sj_get_string_value(unitJ));
+            unitStr = malloc(sizeof(char)*128);
+            if(!unitStr)
+            {
+                slog("unable to malloc unitStr");
+                sj_free(json);
+                return;
+            }
+            strcpy(unitStr, sj_get_string_value(unitJ));
 
             tile_list[pos].building->Think = tile_generate_unit;
             tile_list[pos].building->think_next = -1;
-            tile_list[pos].unit = unit;
+            tile_list[pos].unit = unit_load_unit(unitStr);
+
+            free(unitStr);
 
         } else {
 

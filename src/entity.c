@@ -83,8 +83,7 @@ void entity_think_test_path(entity_t *self){
     {
         self->extra_data = malloc(sizeof(path_t));
         path = (path_t*) self->extra_data;
-        startPoint.x = 0;
-        startPoint.y = 0;
+        startPoint = tile_get_closest_point(self->pos);
         randPoint.x = rand()%TILE_MAX_X;
         randPoint.y = rand()%TILE_MAX_Y;
         *path = path_get_path(startPoint, randPoint);

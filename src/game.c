@@ -23,7 +23,9 @@ typedef struct{
     int         resource;
     int         waveCount;
     int         wave;
-    entity_t  **enemy_list;
+
+    unit_t     *unit_list;
+    unit_t     *enemy_list;
     
 }gM;
 
@@ -54,7 +56,8 @@ int main(int argc,char *argv[])
     Uint32 mouseState;
     Uint32 bufferFrame = 0;
     VkCommandBuffer commandBuffer;
-    entity_t *camEntity, *entity2, *entity3, *uiEntity, *rayEnt;
+    entity_t *camEntity, *entity2, *entity3, *uiEntity, *rayEnt, *spawnedEnt;
+    tile_t *spawnUnits;
     Mix_Music *music;
     SDL_Rect uiRect;
     SDL_Color uiColor;
@@ -84,6 +87,7 @@ int main(int argc,char *argv[])
     entity_system_init();
     tile_system_init();
     physics_system_init();
+    unit_system_init();
     
 
     // main game loop
@@ -148,7 +152,8 @@ int main(int argc,char *argv[])
     entity3 = entity_load("cube");
     entity3->Think = entity_think_test_path;
     entity3->Touch = NULL;
-    vector3d_copy(entity3->pos,tile_get_real_position(0,10)); 
+    vector3d_copy(entity3->pos,tile_get_real_position(0,10));
+    physics_add_body(entity3);
 
     
     while(!done)
@@ -168,6 +173,19 @@ int main(int argc,char *argv[])
                 {
                     rayEnt = physics_raycast_point_on_screen(mousePos, &contact);
                     slog("Position: %f4 %f4 %f4", contact.x, contact.y, contact.z);
+                    spawnUnits = tile_get_tile(1,1);
+                    if(spawnUnits->unit)
+                    {
+                        if(spawnUnits->unit->cost < game_resource_get())
+                        {
+                            game_resource_add(-spawnUnits->unit->cost);
+                            spawnedEnt = entity_load(spawnUnits->unit->name);
+                            spawnedEnt->Think = entity_think_test_path;
+                            spawnedEnt->Touch = NULL;
+                            vector3d_copy(spawnedEnt->pos,tile_get_real_position(0,5));
+                            //physics_add_body(spawnedEnt);
+                        }
+                    }
                     break;
                 }
                 default:

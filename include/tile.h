@@ -4,6 +4,7 @@
 #include "gf3d_types.h"
 #include "gf3d_vector.h"
 #include "entity.h"
+#include "unit.h"
 
 #define TILE_TYPE_RESOURCE_STR  "resource"
 #define TILE_TYPE_UNIT_STR      "unit"
@@ -22,7 +23,7 @@ struct tile_s {
     char       *name;           /**< Name of the tile */
     int         resource_count; /**<Amount of resources left in building*/
     int         resource_gen;   /**<Amount of resources to mine each tick*/
-    char       *unit;           /**<The unit this building can spawn*/
+    unit_t     *unit;           /**<The unit this building can spawn*/
 };
 
 void tile_system_init();

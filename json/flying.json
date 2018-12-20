@@ -3,5 +3,6 @@
     "type" : "flying",
     "attack" : 50,
     "defense" : 25,
-    "health" : 50
+    "health" : 50,
+    "cost" : 50
 }
