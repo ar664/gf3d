@@ -188,9 +188,14 @@ void tile_load(int x, int y, char *tileName)
     sprintf(fn, "json/%s.json", tileName);
     json = sj_load(fn);
 
+    if(!json)
+    {
+        slog("Unable to load json: %s", sj_get_error());
+        return;
+    }
     if(json) {
 
-        typeJ = sj_object_get_value(json, "type");
+        typeJ = sj_object_get_value(json, "building");
         
         if(!typeJ)
         {

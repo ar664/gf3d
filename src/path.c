@@ -62,7 +62,7 @@ Point2D path_get_step(Point2D start, Point2D end)
     chck = tile_get_tile(x, y);
     if(chck)
     {
-        if(!chck->building)
+        if(!chck->building || (end.x == x && end.y == y))
         {
             step.x = x;
             step.y = y;
@@ -82,7 +82,7 @@ Point2D path_get_step(Point2D start, Point2D end)
     chck = tile_get_tile(x, y);
     if(chck)
     {
-        if(!chck->building)
+        if(!chck->building || (end.x == x && end.y == y))
         {
             step.x = x;
             step.y = y;

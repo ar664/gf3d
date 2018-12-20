@@ -1,5 +1,8 @@
 {
-    "type" : "resource",
+    "type" : "CUBE",
+    "shape" : [1,1,1],
+
+    "building" : "resource",
     "count": "600",
     "gen" : "1"
 }

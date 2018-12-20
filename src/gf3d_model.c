@@ -167,7 +167,7 @@ void gf3d_model_update_descriptor_sets(Model *model)
 
     for (i = 0; i < gf3d_model.chain_length; i++)
     {
-        slog("updating descriptor sets");
+        //slog("updating descriptor sets");
         imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
         if(model->texture){
             imageInfo.imageView = model->texture->textureImageView;

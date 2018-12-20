@@ -150,9 +150,11 @@ int main(int argc,char *argv[])
 
 
     entity3 = entity_load("cube");
-    entity3->Think = entity_think_test_path;
+    entity3->Think = NULL;
     entity3->Touch = NULL;
-    vector3d_copy(entity3->pos,tile_get_real_position(0,10));
+    entity3->velocity.x = 0.005;
+    entity3->layer = LAYER_PLAYER;
+    vector3d_copy(entity3->pos,tile_get_real_position(6,0));
     physics_add_body(entity3);
 
     
@@ -182,6 +184,7 @@ int main(int argc,char *argv[])
                             spawnedEnt = entity_load(spawnUnits->unit->name);
                             spawnedEnt->Think = entity_think_test_path;
                             spawnedEnt->Touch = NULL;
+                            spawnedEnt->layer = LAYER_PLAYER;
                             vector3d_copy(spawnedEnt->pos,tile_get_real_position(0,5));
                             //physics_add_body(spawnedEnt);
                         }
