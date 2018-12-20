@@ -67,6 +67,14 @@ void camera_get_perspective(Matrix4 out){
     memcpy(out, Camera.perspective, sizeof(Matrix4));
 }
 
+Vector3D camera_get_forward()
+{
+    return vector3d(Camera.pos.x - Camera.target.x,
+                    Camera.pos.y - Camera.target.y,
+                    Camera.pos.z - Camera.target.z);
+}
+
+
 void camera_set_perspective(Matrix4 in){
     if(!in) return;
 

@@ -50,18 +50,20 @@ void physics_remove_body(entity_t *ent);
 /**
  * @brief Does a raycast to find an entity that intersects that ray
  * 
- * @param ray   position & direction
+ * @param ray       position & direction
+ * @oaran contact   The contact of the raycast
  * @return entity_t* entity that is in the physics simulation
  */
-entity_t *physics_raycast(Ray ray);
+entity_t *physics_raycast(Ray ray, Vector3D *contact);
 
 /**
  * @brief Does a ray cast with a point on screen
  * 
  * @param point     Point on screen (Usually where the mouse is)
+ * @param contact   The contact of the raycast
  * @return entity_t* entity that is in the physics simulation
  */
-entity_t *physics_raycast_point_on_screen(Vector2D point);
+entity_t *physics_raycast_point_on_screen(Point2D point, Vector3D *contact);
 
 /**
  * @brief Find the closest entity to this entity of type layer

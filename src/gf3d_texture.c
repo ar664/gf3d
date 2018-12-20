@@ -222,7 +222,7 @@ Texture *gf3d_texture_from_surface(SDL_Surface *surface)
     {
         return NULL;
     }
-
+    //RGBA = 8 bits * 4
     imageSize = surface->w * surface->h * 4;
     
     gf3d_vgraphics_create_buffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, &stagingBuffer, &stagingBufferMemory);

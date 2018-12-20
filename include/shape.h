@@ -139,6 +139,20 @@ Uint8 shape_edge_intersect(Edge a, Edge b);
 
 Uint8 shape_edge_cube_overlap(Edge e, Cube c);
 
+void shape_triangle_get_normal(Triangle tri, Vector3D *normal);
+void shape_triangle_get_plane(Triangle tri, Vector3D *normal, float *D);
+float shape_ray_in_plane(
+    Vector3D start,
+    Vector3D dir,
+    Vector3D normal,
+    float D,
+    Vector3D *contact);
+float shape_3d_ray_in_triangle(
+    Vector3D start,
+    Vector3D dir,
+    Triangle tri,
+    Vector3D *contact);
+
 /**
  * @brief Check whether two shapes are overlaped
  * 

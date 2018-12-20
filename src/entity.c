@@ -280,7 +280,7 @@ void entity_think_camera(entity_t *self){
     self->relative_rotation.x = ( camera_get_height() / (float) 2 - y ) / (float) 150;
     self->relative_rotation.y = ( camera_get_width() / (float) 2 - x ) / (float) 150;
 
-    if(self->relative_rotation.x > CAMERA_MAX_ROTATION)
+    /* if(self->relative_rotation.x > CAMERA_MAX_ROTATION)
     {
         self->relative_rotation.x = CAMERA_MAX_ROTATION;
     } 
@@ -296,7 +296,7 @@ void entity_think_camera(entity_t *self){
     else if(self->relative_rotation.y < -CAMERA_MAX_ROTATION)
     {
         self->relative_rotation.y = -CAMERA_MAX_ROTATION;
-    }
+    } */
 
     //vector3d_add(self->rotation, self->relative_rotation, self->rotation);
     vector3d_copy(self->rotation, self->relative_rotation);

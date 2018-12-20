@@ -55,6 +55,13 @@ void camera_get_view(Matrix4 out);
 void camera_get_perspective(Matrix4 out);
 
 /**
+ * @brief Get the direction that is forward for the camera
+ * 
+ * @return Vector3D 
+ */
+Vector3D camera_get_forward();
+
+/**
  * @brief Returns the position of the camera
  * 
  * @return Vector3D The postion of the camera

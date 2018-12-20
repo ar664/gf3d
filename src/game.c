@@ -51,14 +51,17 @@ int main(int argc,char *argv[])
 {
     int done = 0, i;
     const Uint8 * keys;
+    Uint32 mouseState;
     Uint32 bufferFrame = 0;
     VkCommandBuffer commandBuffer;
-    entity_t *camEntity, *entity2, *entity3, *uiEntity;
+    entity_t *camEntity, *entity2, *entity3, *uiEntity, *rayEnt;
     Mix_Music *music;
     SDL_Rect uiRect;
     SDL_Color uiColor;
-    //Vector2D samplePos;
-    
+    Point2D mousePos;
+    Vector3D contact = {0};
+    SDL_Event e;
+
     init_logger("gf3d.log");    
     slog("gf3d begin");
     srand(time(NULL));
@@ -152,14 +155,37 @@ int main(int argc,char *argv[])
     {
         SDL_PumpEvents();   // update SDL's internal event structures
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
+        while(SDL_PollEvent(&e))
+        {
+            switch(e.type)
+            {
+                case SDL_QUIT:
+                {
+                    done = 1;
+                    break;
+                }
+                case SDL_MOUSEBUTTONDOWN:
+                {
+                    rayEnt = physics_raycast_point_on_screen(mousePos, &contact);
+                    slog("Position: %f4 %f4 %f4", contact.x, contact.y, contact.z);
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
+        }
+        mouseState = SDL_GetMouseState(&mousePos.x, &mousePos.y);
         //update game things here
         camera_update();
         physics_system_update();
         entity_system_think((Uint8*)keys);
-
+        
         //gf3d_vgraphics_move_model(vector3d(0,5,10));
         //entity2->pos.x += 0.005;
         //gf3d_vgraphics_rotate_camera(0.001);
+
     
         // configure render command for graphics command pool
         // for each mesh, get a command and configure it from the pool
